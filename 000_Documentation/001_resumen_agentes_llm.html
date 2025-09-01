@@ -1,0 +1,457 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>De LLMs a Agentes de IA — Resumen rápido</title>
+<style>
+:root {
+  --bg: #0b0f14;
+  --panel: #111826;
+  --text: #e6edf3;
+  --muted: #9fb0c0;
+  --accent: #3b82f6;
+  --accent-2: #22d3ee;
+  --ok: #10b981;
+  --warn: #f59e0b;
+  --danger: #ef4444;
+  --border: #1f2937;
+  --shadow: 0 10px 30px rgba(0,0,0,.25);
+}
+
+[data-theme="light"] {
+  --bg: #f7fafc;
+  --panel: #ffffff;
+  --text: #0b1220;
+  --muted: #374151;
+  --accent: #2563eb;
+  --accent-2: #0891b2;
+  --ok: #059669;
+  --warn: #b45309;
+  --danger: #b91c1c;
+  --border: #e5e7eb;
+  --shadow: 0 10px 30px rgba(0,0,0,.08);
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  min-height: 100vh;
+}
+
+aside {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: 100vh;
+  border-right: 1px solid var(--border);
+  background: linear-gradient(180deg, var(--panel), rgba(0,0,0,0));
+  padding: 24px 18px;
+}
+
+.logo {
+  font-weight: 800;
+  font-size: 1.3rem;
+  letter-spacing: .3px;
+  margin-bottom: 8px;
+}
+.subtitle {
+  color: var(--muted);
+  font-size: .9rem;
+  margin-bottom: 18px;
+}
+
+nav a {
+  display: block;
+  padding: 10px 12px;
+  margin: 6px 0;
+  color: var(--text);
+  text-decoration: none;
+  border: 1px solid transparent;
+  border-radius: 12px;
+}
+nav a:hover {
+  border-color: var(--border);
+  background: rgba(59,130,246,.08);
+}
+
+main {
+  padding: 40px 28px;
+  max-width: 1100px;
+}
+
+.hint {
+  background: linear-gradient(180deg, rgba(34,211,238,.1), rgba(34,211,238,.03));
+  border: 1px solid var(--border);
+  padding: 14px 16px;
+  border-radius: 12px;
+  margin: 16px 0 24px;
+}
+
+h1 { font-size: 2rem; margin: 0 0 10px; }
+h2 { font-size: 1.4rem; margin-top: 36px; }
+h3 { font-size: 1.1rem; margin-top: 24px; color: var(--muted); }
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  padding: 20px;
+  margin: 20px 0;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+  font-size: .95rem;
+}
+th, td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+th {
+  text-align: left;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.kbd {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: .9rem;
+  background: #0b1220;
+  color: #e6edf3;
+  padding: 2px 6px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: .8rem;
+  border: 1px solid var(--border);
+  color: var(--muted);
+}
+
+.flex { display:flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+.footer {
+  color: var(--muted);
+  font-size: .9rem;
+  margin-top: 40px;
+  border-top: 1px dashed var(--border);
+  padding-top: 16px;
+}
+
+.btns {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  display: flex;
+  gap: 10px;
+}
+.btn {
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 12px;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+}
+.btn:hover { filter: brightness(1.05); }
+
+svg {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(59,130,246,.08), rgba(59,130,246,.03));
+}
+.caption { color: var(--muted); font-size: .9rem; margin-top: 8px; }
+
+mark { background: rgba(59,130,246,.2); padding: 2px 4px; border-radius: 6px; }
+</style>
+</head>
+<body data-theme="dark">
+<div class="container">
+  <aside>
+    <div class="logo">Agentes de IA</div>
+    <div class="subtitle">De LLMs a sistemas compuestos</div>
+    <nav>
+      <a href="#intro">1. Introducción</a>
+      <a href="#compuestos">2. Sistemas compuestos de IA</a>
+      <a href="#agente">3. ¿Qué es un agente?</a>
+      <a href="#arquitectura">4. Arquitectura de un agente</a>
+      <a href="#comparativa">5. Comparativa</a>
+      <a href="#cuandos">6. ¿Cuándo usar uno u otro?</a>
+      <a href="#roi">7. ROI y costos</a>
+      <a href="#glosario">8. Glosario rápido</a>
+    </nav>
+    <div class="hint">
+      <strong>Tip:</strong> Usa el botón “Imprimir” para exportar como PDF.
+    </div>
+    <div class="flex">
+      <span class="badge">LLM</span>
+      <span class="badge">Herramientas</span>
+      <span class="badge">Planificación</span>
+      <span class="badge">Memoria</span>
+    </div>
+  </aside>
+
+  <main>
+    <header>
+      <h1>De LLMs a Agentes de IA — Resumen rápido</h1>
+      <p class="subtitle">Por qué pasamos del chat básico con modelos grandes a <em>agentes</em> que planifican, llaman herramientas y resuelven flujos complejos en tiempo real.</p>
+    </header>
+
+    <section id="intro" class="card">
+      <h2>1) Introducción</h2>
+      <p>
+        El uso inicial de los <strong>LLMs</strong> se centró en chats de ida y vuelta. Aunque útiles, su operación y afinación
+        resultaron <mark>costosas</mark> y con ROI limitado para procesos empresariales complejos.
+      </p>
+      <p>
+        La industria evolucionó hacia integrar más capacidades alrededor del modelo —nació así la idea de los
+        <strong>sistemas compuestos de IA</strong>, donde varios componentes colaboran.
+      </p>
+    </section>
+
+    <section id="compuestos" class="card">
+      <h2>2) Sistemas compuestos de IA</h2>
+      <p>
+        Un sistema compuesto combina un LLM con <em>herramientas</em> (APIs, bases de datos, runtimes), <em>servicios predictivos</em> y
+        capacidades <em>multimodales</em>. El resultado: soluciones más ricas que un modelo aislado.
+      </p>
+
+      <!-- Simple Venn-like SVG -->
+      <figure>
+        <svg viewBox="0 0 720 260" role="img" aria-label="Diagrama de Venn simplificado: LLM, Herramientas, Datos/Servicios">
+          <defs>
+            <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+              <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="rgba(0,0,0,.35)" />
+            </filter>
+          </defs>
+          <g filter="url(#shadow)">
+            <ellipse cx="220" cy="130" rx="180" ry="90" fill="rgba(59,130,246,.25)"></ellipse>
+            <ellipse cx="360" cy="130" rx="180" ry="90" fill="rgba(34,197,94,.25)"></ellipse>
+            <ellipse cx="500" cy="130" rx="180" ry="90" fill="rgba(234,179,8,.25)"></ellipse>
+          </g>
+          <text x="160" y="135" fill="currentColor" style="font-weight:700">LLM</text>
+          <text x="335" y="85" fill="currentColor" style="font-weight:700">Herramientas</text>
+          <text x="470" y="185" fill="currentColor" style="font-weight:700">Datos / Servicios</text>
+          <text x="310" y="140" fill="currentColor">Zona de intersección: sistema compuesto</text>
+        </svg>
+        <figcaption class="caption">En los sistemas compuestos, el valor surge en la intersección: el LLM + herramientas + datos/servicios.</figcaption>
+      </figure>
+    </section>
+
+    <section id="agente" class="card">
+      <h2>3) ¿Qué es un agente de IA?</h2>
+      <p>
+        Un <strong>agente</strong> es una aplicación donde el LLM, en el centro, no solo predice texto: también <mark>planifica</mark> y
+        <mark>orquesta</mark> el uso de herramientas. Tú <em>codificas las herramientas</em>, pero <em>no rigidizas la planificación</em>:
+        el agente decide en tiempo de ejecución cómo encadenarlas.
+      </p>
+      <div class="grid-2">
+        <div>
+          <h3>Antes</h3>
+          <ul>
+            <li>Chat con LLM aislado.</li>
+            <li>Herramientas limitadas, <em>planificación hard-coded</em>.</li>
+            <li>Dificultad para flujos cambiantes.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Ahora</h3>
+          <ul>
+            <li>Agentes con herramientas y memoria.</li>
+            <li>Planificación dinámica hecha por el LLM.</li>
+            <li>Mejor ajuste a procesos reales.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="arquitectura" class="card">
+      <h2>4) Arquitectura de un agente (visión simplificada)</h2>
+      <figure>
+        <svg viewBox="0 0 880 360" role="img" aria-label="Arquitectura de un agente: Planner, LLM, Memoria, Herramientas, Datos">
+          <!-- Boxes -->
+          <rect x="40" y="40" width="800" height="280" rx="16" ry="16" fill="rgba(17,24,39,.5)" stroke="var(--border)"/>
+          <text x="52" y="62" fill="var(--muted)" style="font-size:13px">Aplicación de Agente</text>
+
+          <rect x="100" y="90" width="220" height="80" rx="12" ry="12" fill="rgba(59,130,246,.25)" stroke="var(--border)"/>
+          <text x="120" y="120" fill="currentColor" style="font-weight:700">Planner</text>
+          <text x="120" y="140" fill="currentColor" style="font-size:13px">Descompone tareas y decide el orden</text>
+
+          <rect x="360" y="90" width="180" height="80" rx="12" ry="12" fill="rgba(34,197,94,.25)" stroke="var(--border)"/>
+          <text x="388" y="120" fill="currentColor" style="font-weight:700">LLM Núcleo</text>
+          <text x="370" y="140" fill="currentColor" style="font-size:13px">Razonamiento y generación</text>
+
+          <rect x="580" y="90" width="220" height="80" rx="12" ry="12" fill="rgba(234,179,8,.25)" stroke="var(--border)"/>
+          <text x="600" y="120" fill="currentColor" style="font-weight:700">Memoria / Contexto</text>
+          <text x="600" y="140" fill="currentColor" style="font-size:13px">Historial, preferencias, estado</text>
+
+          <rect x="140" y="210" width="200" height="80" rx="12" ry="12" fill="rgba(59,130,246,.25)" stroke="var(--border)"/>
+          <text x="168" y="240" fill="currentColor" style="font-weight:700">Herramienta A (API)</text>
+          <text x="168" y="260" fill="currentColor" style="font-size:13px">Servicios externos</text>
+
+          <rect x="360" y="210" width="200" height="80" rx="12" ry="12" fill="rgba(59,130,246,.25)" stroke="var(--border)"/>
+          <text x="392" y="240" fill="currentColor" style="font-weight:700">Herramienta B (Cálculo)</text>
+          <text x="392" y="260" fill="currentColor" style="font-size:13px">Python/SQL/ETL</text>
+
+          <rect x="580" y="210" width="200" height="80" rx="12" ry="12" fill="rgba(59,130,246,.25)" stroke="var(--border)"/>
+          <text x="620" y="240" fill="currentColor" style="font-weight:700">Herramienta C (Gráficos)</text>
+          <text x="620" y="260" fill="currentColor" style="font-size:13px">Visualización</text>
+
+          <!-- Arrows -->
+          <defs>
+            <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <polygon points="0 0, 6 3, 0 6" fill="currentColor"/>
+            </marker>
+          </defs>
+          <line x1="220" y1="170" x2="430" y2="170" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow)"/>
+          <line x1="450" y1="170" x2="690" y2="170" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+          <line x1="450" y1="170" x2="240" y2="210" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow)"/>
+          <line x1="450" y1="170" x2="460" y2="210" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow)"/>
+          <line x1="450" y1="170" x2="680" y2="210" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow)"/>
+        </svg>
+        <figcaption class="caption">El LLM planifica y decide qué herramienta usar, con memoria para mantener contexto entre pasos.</figcaption>
+      </figure>
+    </section>
+
+    <section id="comparativa" class="card">
+      <h2>5) Comparativa</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Aspecto</th>
+            <th>LLM “directo” (chat)</th>
+            <th>Agente de IA</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Estado/Contexto</td>
+            <td>Stateless; debes reinyectar historial</td>
+            <td>Memoria y estado gestionados por el agente</td>
+          </tr>
+          <tr>
+            <td>Planificación</td>
+            <td>La codificas tú de forma rígida</td>
+            <td>Planificación dinámica decidida por el modelo</td>
+          </tr>
+          <tr>
+            <td>Herramientas</td>
+            <td>Limitadas; integración ad-hoc</td>
+            <td>Integración nativa de múltiples tools</td>
+          </tr>
+          <tr>
+            <td>Complejidad de flujos</td>
+            <td>Adecuado para tareas simples</td>
+            <td>Ideal para flujos empresariales complejos</td>
+          </tr>
+          <tr>
+            <td>Coste/ROI</td>
+            <td>Coste alto si se usa solo chat</td>
+            <td>Mejor ROI al automatizar tareas y decisiones</td>
+          </tr>
+          <tr>
+            <td>Escalabilidad</td>
+            <td>Manual y frágil</td>
+            <td>Más robusto y extensible</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="cuandos" class="card">
+      <h2>6) ¿Cuándo usar uno u otro?</h2>
+      <div class="grid-2">
+        <div>
+          <h3>Elige LLM “directo” si…</h3>
+          <ul>
+            <li>Necesitas prototipos rápidos o POCs.</li>
+            <li>La tarea es puntual y sin pasos intermedios.</li>
+            <li>El contexto es pequeño y controlado.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Elige Agente si…</h3>
+          <ul>
+            <li>Debes <strong>encadenar herramientas</strong> (APIs, DBs, scripts).</li>
+            <li>Requieres <strong>memoria</strong> y <strong>estado</strong> entre turnos.</li>
+            <li>Hay <strong>flujos cambiantes</strong> que piden planificación dinámica.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="roi" class="card">
+      <h2>7) ROI y costos</h2>
+      <ul>
+        <li>Evita chats “vanilla” cuando el proceso exige acciones: añade herramientas.</li>
+        <li>La <em>planificación dinámica</em> reduce código rígido y mantenimiento.</li>
+        <li>La <em>memoria</em> reduce tokens y llamadas repetitivas.</li>
+        <li>Mide impacto: latencia, costo por tarea completada, satisfacción del usuario.</li>
+      </ul>
+    </section>
+
+    <section id="glosario" class="card">
+      <h2>8) Glosario rápido</h2>
+      <table>
+        <tr>
+          <th>LLM</th>
+          <td>Modelo de lenguaje de gran tamaño; predice y genera texto.</td>
+        </tr>
+        <tr>
+          <th>Herramientas (Tools)</th>
+          <td>Funciones/APIs que el agente invoca para actuar en el mundo externo.</td>
+        </tr>
+        <tr>
+          <th>Planificación</th>
+          <td>Decidir <em>qué</em> hacer y <em>en qué orden</em> para alcanzar un objetivo.</td>
+        </tr>
+        <tr>
+          <th>Memoria</th>
+          <td>Persistencia de contexto entre mensajes o sesiones.</td>
+        </tr>
+      </table>
+    </section>
+
+    <div class="footer">
+      Hecho para estudio personal. Puedes reutilizarlo y adaptarlo a tus cursos/documentación.
+    </div>
+  </main>
+</div>
+
+<div class="btns">
+  <button class="btn" onclick="document.body.dataset.theme = (document.body.dataset.theme === 'light' ? 'dark' : 'light')">🌗 Modo</button>
+  <button class="btn" onclick="window.print()">🖨️ Imprimir</button>
+  <button class="btn" onclick="window.scrollTo({top:0, behavior:'smooth'})">⬆️ Arriba</button>
+</div>
+
+</body>
+</html>

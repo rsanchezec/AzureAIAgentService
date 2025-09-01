@@ -1,0 +1,223 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenAPI + Agentes de Azure AI — Guía Interactiva</title>
+<style>
+:root{
+  --bg:#0b0f14; --panel:#111826; --text:#e6edf3; --muted:#9fb0c0;
+  --accent:#f59e0b; --accent2:#22d3ee; --border:#1f2937;
+  --ok:#10b981; --warn:#f59e0b; --danger:#ef4444;
+  --shadow:0 10px 30px rgba(0,0,0,.25);
+}
+[data-theme="light"]{
+  --bg:#f7fafc; --panel:#ffffff; --text:#0b1220; --muted:#475569;
+  --accent:#d97706; --accent2:#0891b2; --border:#e5e7eb;
+  --ok:#059669; --warn:#b45309; --danger:#b91c1c;
+  --shadow:0 10px 30px rgba(0,0,0,.08);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+.container{display:grid;grid-template-columns:300px 1fr;min-height:100vh}
+aside{position:sticky;top:0;height:100vh;padding:22px 16px;border-right:1px solid var(--border);background:linear-gradient(180deg,var(--panel),rgba(0,0,0,0))}
+.logo{font-weight:800;font-size:1.25rem;margin-bottom:6px}
+.subtitle{color:var(--muted);font-size:.95rem;margin-bottom:16px}
+nav a{display:block;padding:9px 10px;margin:6px 0;border-radius:12px;text-decoration:none;color:var(--text);border:1px solid transparent}
+nav a:hover{border-color:var(--border);background:rgba(245,158,11,.10)}
+.badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:.8rem;border:1px solid var(--border);color:var(--muted)}
+.flex{display:flex;gap:8px;flex-wrap:wrap}
+main{padding:36px 28px;max-width:1180px}
+h1{margin:0 0 6px;font-size:2rem}
+h2{margin-top:28px;font-size:1.35rem}
+h3{margin-top:18px;font-size:1.05rem;color:var(--muted)}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);padding:18px;margin:18px 0}
+.grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.95rem}
+th,td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+th{text-align:left;color:var(--muted)}
+.kbd{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:#0b1220;color:#e6edf3;border:1px solid var(--border);padding:2px 6px;border-radius:6px}
+.hint{background:linear-gradient(180deg,rgba(245,158,11,.10),rgba(245,158,11,.03));border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-top:10px}
+.btns{position:fixed;right:16px;bottom:16px;display:flex;gap:10px}
+.btn{background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:10px 12px;cursor:pointer;box-shadow:var(--shadow)}
+.btn:hover{filter:brightness(1.05)}
+.caption{color:var(--muted);font-size:.9rem;margin-top:6px}
+svg{width:100%;height:auto;border-radius:12px;border:1px solid var(--border);background:linear-gradient(180deg,rgba(245,158,11,.08),rgba(245,158,11,.03))}
+details{border:1px dashed var(--border);border-radius:12px;padding:10px 12px}
+mark{background:rgba(245,158,11,.22);padding:1px 4px;border-radius:6px}
+.footer{color:var(--muted);font-size:.9rem;margin-top:30px;border-top:1px dashed var(--border);padding-top:12px}
+.code{background:#0b1220;border:1px solid var(--border);border-radius:12px;padding:12px;overflow:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9rem}
+.small{font-size:.9rem;color:var(--muted)}
+kbd{background:#0b1220;border:1px solid var(--border);border-radius:6px;padding:1px 5px}
+</style>
+</head>
+<body data-theme="dark">
+<div class="container">
+  <aside>
+    <div class="logo">OpenAPI + Agentes</div>
+    <div class="subtitle">Guía visual y práctica</div>
+    <nav>
+      <a href="#resumen">1. Resumen</a>
+      <a href="#flujo">2. Diagrama de flujo</a>
+      <a href="#ejemplo">3. Ejemplo de esquema</a>
+      <a href="#tablas">4. Rutas y parámetros</a>
+      <a href="#buenas">5. Buenas prácticas</a>
+      <a href="#check">6. Checklist</a>
+    </nav>
+    <div class="hint">
+      <strong>Tip:</strong> Usa <em>Imprimir</em> para exportar a PDF y 🌗 para alternar tema.
+    </div>
+    <div class="flex" style="margin-top:10px">
+      <span class="badge">OpenAPI</span>
+      <span class="badge">Planner</span>
+      <span class="badge">RAG</span>
+      <span class="badge">APIs</span>
+    </div>
+  </aside>
+
+  <main>
+    <header>
+      <h1>OpenAPI + Agentes de Azure AI — HTML Interactivo</h1>
+      <p class="subtitle">Estandariza tus APIs, deja que el agente razone qué endpoint invocar y automatiza flujos con menos código.</p>
+    </header>
+
+    <section id="resumen" class="card">
+      <h2>1) Resumen</h2>
+      <p><strong>OpenAPI</strong> es el contrato estándar para describir APIs (rutas, métodos, parámetros, cuerpos y respuestas). Si entregas el esquema al agente, éste puede <em>entender</em> sus capacidades y <em>decidir</em> qué endpoint usar sin lógica rígida.</p>
+    </section>
+
+    <section id="flujo" class="card">
+      <h2>2) Diagrama de flujo</h2>
+      <figure>
+        <svg viewBox="0 0 1100 420" role="img" aria-label="Flujo de decisión con OpenAPI: Usuario → Intención → Selección de endpoint → Llamada API → Respuesta">
+          <defs>
+            <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <polygon points="0 0, 6 3, 0 6" fill="currentColor"/>
+            </marker>
+          </defs>
+          <rect x="40" y="40" width="1020" height="340" rx="16" ry="16" fill="rgba(17,24,39,.45)" stroke="var(--border)"/>
+          <text x="56" y="62" fill="var(--muted)" style="font-size:13px">Ejecución con esquema OpenAPI</text>
+
+          <rect x="70" y="120" width="200" height="80" rx="12" ry="12" fill="rgba(245,158,11,.25)" stroke="var(--border)"/>
+          <text x="120" y="165" fill="currentColor" style="font-weight:700">Usuario</text>
+
+          <rect x="300" y="120" width="240" height="80" rx="12" ry="12" fill="rgba(245,158,11,.25)" stroke="var(--border)"/>
+          <text x="330" y="160" fill="currentColor" style="font-weight:700">Agente (LLM + planner)</text>
+
+          <rect x="580" y="80" width="220" height="70" rx="12" ry="12" fill="rgba(34,197,94,.25)" stroke="var(--border)"/>
+          <text x="600" y="110" fill="currentColor" style="font-weight:700">Lee OpenAPI</text>
+          <text x="600" y="125" fill="currentColor" style="font-size:13px">rutas, métodos, schemas</text>
+
+          <rect x="580" y="170" width="220" height="70" rx="12" ry="12" fill="rgba(34,197,94,.25)" stroke="var(--border)"/>
+          <text x="600" y="200" fill="currentColor" style="font-weight:700">Selecciona endpoint</text>
+          <text x="600" y="215" fill="currentColor" style="font-size:13px">según intención</text>
+
+          <rect x="580" y="260" width="220" height="70" rx="12" ry="12" fill="rgba(34,197,94,.25)" stroke="var(--border)"/>
+          <text x="600" y="290" fill="currentColor" style="font-weight:700">Valida parámetros</text>
+          <text x="600" y="305" fill="currentColor" style="font-size:13px">tipos, requeridos</text>
+
+          <rect x="840" y="170" width="200" height="80" rx="12" ry="12" fill="rgba(245,158,11,.25)" stroke="var(--border)"/>
+          <text x="860" y="205" fill="currentColor" style="font-weight:700">Llama API</text>
+
+          <rect x="840" y="260" width="200" height="80" rx="12" ry="12" fill="rgba(245,158,11,.25)" stroke="var(--border)"/>
+          <text x="860" y="300" fill="currentColor" style="font-weight:700">Resume respuesta</text>
+
+          <line x1="270" y1="160" x2="300" y2="160" stroke="currentColor" marker-end="url(#arrow)"/>
+          <line x1="540" y1="160" x2="580" y2="115" stroke="currentColor" marker-end="url(#arrow)"/>
+          <line x1="540" y1="160" x2="580" y2="205" stroke="currentColor" marker-end="url(#arrow)"/>
+          <line x1="540" y1="160" x2="580" y2="295" stroke="currentColor" marker-end="url(#arrow)"/>
+          <line x1="800" y1="205" x2="840" y2="205" stroke="currentColor" marker-end="url(#arrow)"/>
+          <line x1="800" y1="295" x2="840" y2="295" stroke="currentColor" marker-end="url(#arrow)"/>
+          <line x1="940" y1="250" x2="940" y2="260" stroke="currentColor" marker-end="url(#arrow)"/>
+        </svg>
+        <figcaption class="caption">El agente usa el contrato OpenAPI para decidir qué ruta invocar y cómo construir la petición.</figcaption>
+      </figure>
+    </section>
+
+    <section id="ejemplo" class="card">
+      <h2>3) Ejemplo de esquema (YAML recortado)</h2>
+      <pre class="code">openapi: 3.0.3
+info:
+  title: Weather API (demo)
+  description: API pública para obtener el clima actual por ciudad.
+  version: 1.0.0
+servers:
+  - url: https://api.weather.example
+paths:
+  /location/{city}:
+    get:
+      description: Obtiene el clima actual para la ciudad dada.
+      parameters:
+        - name: city
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tempC: { type: number }
+                  condition: { type: string }
+        '404':
+          description: Ciudad no encontrada</pre>
+      <p class="small">💡 Usa descripciones claras. El agente las lee para decidir si este endpoint responde a la intención del usuario.</p>
+    </section>
+
+    <section id="tablas" class="card">
+      <h2>4) Rutas y parámetros (qué debe entender el agente)</h2>
+      <table>
+        <thead><tr><th>Campo</th><th>Ejemplo</th><th>Importancia</th></tr></thead>
+        <tbody>
+          <tr><td><code>paths</code></td><td><code>/location/{city}</code></td><td>Define los endpoints disponibles</td></tr>
+          <tr><td><code>method</code></td><td><code>GET</code></td><td>Acción permitida (GET/POST/...)</td></tr>
+          <tr><td><code>parameters</code></td><td><code>city (path, string, required)</code></td><td>Entrada esperada por el endpoint</td></tr>
+          <tr><td><code>requestBody</code></td><td><code>application/json</code></td><td>Esquema de payload para POST/PUT</td></tr>
+          <tr><td><code>responses</code></td><td><code>200/404/500</code></td><td>Contratos de salida; guían el post-procesado</td></tr>
+        </tbody>
+      </table>
+      <details>
+        <summary>Consejo</summary>
+        Mantén el esquema actualizado: agregar una ruta nueva no requiere cambiar el código del agente; basta con actualizar el OpenAPI.
+      </details>
+    </section>
+
+    <section id="buenas" class="card">
+      <h2>5) Buenas prácticas</h2>
+      <ul>
+        <li>Describe endpoints con <strong>propósito claro</strong> y parámetros bien tipados.</li>
+        <li>Usa <strong>schemas reutilizables</strong> (<code>components/schemas</code>) para consistencia.</li>
+        <li>Documenta <strong>códigos de error</strong> y mensajes para manejo robusto.</li>
+        <li>Protege credenciales (Key Vault/Entra) y aplica <strong>mínimo privilegio</strong>.</li>
+        <li>Loguea llamadas y habilita <strong>observabilidad</strong> (latencia, tasa de error).</li>
+      </ul>
+    </section>
+
+    <section id="check" class="card">
+      <h2>6) Checklist para integrar OpenAPI con tu agente</h2>
+      <ul>
+        <li>Esquema OpenAPI válido (3.x), con descripciones útiles.</li>
+        <li>Endpoints y parámetros marcados como <code>required</code> donde aplique.</li>
+        <li>Respuestas tipadas; incluye ejemplos si es posible.</li>
+        <li>Estrategia de autenticación (tokens, scopes, expiración).</li>
+        <li>Plan de errores y reintentos (timeouts, backoff).</li>
+      </ul>
+    </section>
+
+    <div class="footer">
+      Hecho para estudio personal. Personalízalo para tus cursos o documentación.
+    </div>
+  </main>
+</div>
+
+<div class="btns">
+  <button class="btn" onclick="document.body.dataset.theme = (document.body.dataset.theme === 'light' ? 'dark' : 'light')">🌗 Modo</button>
+  <button class="btn" onclick="window.print()">🖨️ Imprimir</button>
+  <button class="btn" onclick="window.scrollTo({top:0, behavior:'smooth'})">⬆️ Arriba</button>
+</div>
+</body>
+</html>

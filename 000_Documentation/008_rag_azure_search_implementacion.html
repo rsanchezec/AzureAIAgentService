@@ -1,0 +1,401 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RAG con Azure AI Search — Resumen + Paso a Paso (copiar/pegar)</title>
+<style>
+:root{
+  --bg:#0b0f14; --panel:#0f172a; --text:#e6edf3; --muted:#9fb0c0;
+  --accent:#22d3ee; --accent2:#a78bfa; --border:#1f2937;
+  --ok:#10b981; --warn:#f59e0b; --danger:#ef4444;
+  --shadow:0 12px 32px rgba(0,0,0,.25);
+}
+[data-theme="light"]{
+  --bg:#f7fafc; --panel:#ffffff; --text:#0b1220; --muted:#475569;
+  --accent:#0891b2; --accent2:#7c3aed; --border:#e5e7eb;
+  --ok:#059669; --warn:#b45309; --danger:#b91c1c;
+  --shadow:0 10px 30px rgba(0,0,0,.08);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+.container{display:grid;grid-template-columns:340px 1fr;min-height:100vh}
+aside{position:sticky;top:0;height:100vh;padding:22px 16px;border-right:1px solid var(--border);background:linear-gradient(180deg,var(--panel),rgba(0,0,0,0))}
+.logo{font-weight:800;font-size:1.25rem;margin-bottom:6px}
+.subtitle{color:var(--muted);font-size:.95rem;margin-bottom:16px}
+nav a{display:block;padding:9px 10px;margin:6px 0;border-radius:12px;text-decoration:none;color:var(--text);border:1px solid transparent}
+nav a:hover{border-color:var(--border);background:rgba(34,211,238,.10)}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);padding:18px;margin:18px 0}
+.grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+h1{margin:0 0 6px;font-size:2rem}
+h2{margin-top:28px;font-size:1.35rem}
+h3{margin-top:18px;font-size:1.05rem;color:var(--muted)}
+small,.small{color:var(--muted);font-size:.9rem}
+.badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:.8rem;border:1px solid var(--border);color:var(--muted)}
+.flex{display:flex;gap:8px;flex-wrap:wrap}
+.btns{position:fixed;right:16px;bottom:16px;display:flex;gap:10px;z-index:5}
+.btn{background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:10px 12px;cursor:pointer;box-shadow:var(--shadow)}
+.btn:hover{filter:brightness(1.05)}
+.code{position:relative;background:#0b1220;border:1px solid var(--border);border-radius:12px;padding:12px 12px 40px;overflow:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9rem;margin:8px 0}
+.copy{position:absolute;right:10px;bottom:8px;background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:.85rem;cursor:pointer}
+fieldset{border:1px dashed var(--border);border-radius:12px;padding:12px}
+label{display:block;margin:8px 0 4px}
+input{width:100%;padding:8px;border-radius:10px;border:1px solid var(--border);background:var(--panel);color:var(--text)}
+kbd{background:#0b1220;border:1px solid var(--border);border-radius:6px;padding:1px 5px}
+svg{width:100%;height:auto;border-radius:12px;border:1px solid var(--border);background:linear-gradient(180deg,rgba(34,211,238,.08),rgba(34,211,238,.03))}
+.footer{color:var(--muted);font-size:.9rem;margin-top:30px;border-top:1px dashed var(--border);padding-top:12px}
+hr{border:0;border-top:1px dashed var(--border);margin:14px 0}
+</style>
+</head>
+<body data-theme="dark">
+<div class="container">
+  <aside>
+    <div class="logo">RAG + Azure AI Search</div>
+    <div class="subtitle">Resumen y pasos listos para copiar</div>
+    <nav>
+      <a href="#resumen">1. Resumen</a>
+      <a href="#vars">2. Variables</a>
+      <a href="#index">3. Crear índice (vector)</a>
+      <a href="#skillset">4. Crear skillset (incl. embeddings)</a>
+      <a href="#datasource">5. Crear data source</a>
+      <a href="#indexer">6. Crear indexer</a>
+      <a href="#run">7. Ejecutar & monitor</a>
+      <a href="#query">8. Consulta híbrida</a>
+    </nav>
+    <div class="flex" style="margin-top:10px">
+      <span class="badge">Vector Search</span>
+      <span class="badge">Embeddings</span>
+      <span class="badge">Skillsets</span>
+      <span class="badge">Indexers</span>
+    </div>
+  </aside>
+
+  <main>
+    <header>
+      <h1>RAG con Azure AI Search — Guía Interactiva</h1>
+      <p class="subtitle">Indexa documentos, genera <em>embeddings</em> en el pipeline, consulta en modo <strong>híbrido</strong> y entrega contexto al LLM.</p>
+    </header>
+
+    <section id="resumen" class="card">
+      <h2>1) Resumen</h2>
+      <ul>
+        <li><strong>Azure AI Search</strong> actúa como <em>almacenamiento vectorial nativo</em> y motor de recuperación (texto completo + vectorial + híbrido).</li>
+        <li>Pipeline: <strong>Data Source → Indexer → Skillset (enriquecimientos + embeddings) → Index</strong>.</li>
+        <li>En consulta, vectoriza la pregunta, ejecuta <strong>búsqueda híbrida</strong> y envía los <strong>top‑k</strong> fragmentos al LLM.</li>
+      </ul>
+    </section>
+
+    <section id="vars" class="card">
+      <h2>2) Variables del proyecto</h2>
+      <p class="small">Rellena y pulsa <kbd>Generar snippets</kbd>. Los ejemplos usan <strong>cURL</strong> contra la REST API de Azure AI Search.</p>
+      <fieldset>
+        <div class="grid-2">
+          <div>
+            <label>Nombre del servicio de Search (sin https):</label>
+            <input id="svc" placeholder="mi-servicio-search">
+            <label>API version (Search):</label>
+            <input id="apiversion" placeholder="2024-07-01" value="2024-07-01">
+            <label>Clave Admin de Search:</label>
+            <input id="key" placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" >
+            <label>Nombre del índice:</label>
+            <input id="indexName" placeholder="docs-index" value="docs-index">
+            <label>Dimensiones embedding:</label>
+            <input id="dims" placeholder="1536" value="1536">
+          </div>
+          <div>
+            <label>Nombre del skillset:</label>
+            <input id="skillsetName" placeholder="docs-skillset" value="docs-skillset">
+            <label>Nombre del indexer:</label>
+            <input id="indexerName" placeholder="docs-indexer" value="docs-indexer">
+            <label>Nombre del data source:</label>
+            <input id="dsName" placeholder="docs-datasource" value="docs-datasource">
+            <label>Contenedor Blob (origen):</label>
+            <input id="container" placeholder="documentos">
+            <label>Deployment Embeddings (Azure OpenAI):</label>
+            <input id="embeddingDeployment" placeholder="text-embedding-ada-002">
+          </div>
+        </div>
+        <div class="grid-2" style="margin-top:8px">
+          <div>
+            <label>Endpoint Azure OpenAI (Embeddings):</label>
+            <input id="aoaiEndpoint" placeholder="https://mi-aoai.openai.azure.com/">
+          </div>
+          <div>
+            <label>API version (AOAI):</label>
+            <input id="aoaiApiVersion" placeholder="2024-05-01-preview" value="2024-05-01-preview">
+          </div>
+        </div>
+        <div class="grid-2" style="margin-top:8px">
+          <div>
+            <label>Connection String de Blob (origen):</label>
+            <input id="conn" placeholder="DefaultEndpointsProtocol=...">
+          </div>
+          <div>
+            <label>Clave de Cognitive Services (para skillset):</label>
+            <input id="cogKey" placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
+          </div>
+        </div>
+        <div style="margin-top:10px">
+          <button class="btn" onclick="regen()">Generar snippets</button>
+        </div>
+      </fieldset>
+      <p class="small">⚠️ Revisa versiones de API y permisos en tu suscripción. Los nombres son de ejemplo.</p>
+    </section>
+
+    <section id="index" class="card">
+      <h2>3) Crear índice con campo vectorial</h2>
+      <div class="code"><pre id="code-index"></pre><button class="copy" onclick="copyCode('code-index')">Copiar</button></div>
+    </section>
+
+    <section id="skillset" class="card">
+      <h2>4) Crear skillset (enriquecimiento + embeddings)</h2>
+      <p class="small">Incluye KeyPhrases/Entidades y <em>AzureOpenAIEmbeddingSkill</em> para generar el vector de <code>content</code> durante la indexación.</p>
+      <div class="code"><pre id="code-skillset"></pre><button class="copy" onclick="copyCode('code-skillset')">Copiar</button></div>
+    </section>
+
+    <section id="datasource" class="card">
+      <h2>5) Crear data source (Blob)</h2>
+      <div class="code"><pre id="code-ds"></pre><button class="copy" onclick="copyCode('code-ds')">Copiar</button></div>
+    </section>
+
+    <section id="indexer" class="card">
+      <h2>6) Crear indexer (mapeos y skillset)</h2>
+      <div class="code"><pre id="code-indexer"></pre><button class="copy" onclick="copyCode('code-indexer')">Copiar</button></div>
+    </section>
+
+    <section id="run" class="card">
+      <h2>7) Ejecutar indexer & monitor</h2>
+      <div class="code"><pre id="code-run"></pre><button class="copy" onclick="copyCode('code-run')">Copiar</button></div>
+    </section>
+
+    <section id="query" class="card">
+      <h2>8) Consulta híbrida (keyword + vector)</h2>
+      <p class="small">Primero genera el embedding de la <em>pregunta</em> con tu deployment; luego úsalo en <code>vectors</code> del <code>search</code>.</p>
+      <div class="grid-2">
+        <div>
+          <h3>8.1 Obtener embedding de la consulta</h3>
+          <div class="code"><pre id="code-embed"></pre><button class="copy" onclick="copyCode('code-embed')">Copiar</button></div>
+        </div>
+        <div>
+          <h3>8.2 Búsqueda híbrida en el índice</h3>
+          <div class="code"><pre id="code-search"></pre><button class="copy" onclick="copyCode('code-search')">Copiar</button></div>
+        </div>
+      </div>
+      <hr>
+      <h3>Respuesta con contexto para el LLM (plantilla)</h3>
+      <div class="code"><pre id="code-prompt">Sistema: Responde SOLO con la información del contexto. 
+Si no hay evidencia suficiente, di "no encontrado".
+Usuario: {pregunta}
+Contexto:
+1) {chunk_1} (fuente: {src_1})
+2) {chunk_2} (fuente: {src_2})
+...</pre><button class="copy" onclick="copyCode('code-prompt')">Copiar</button></div>
+    </section>
+
+    <div class="footer">
+      Hecho para estudio personal. Ajusta versiones de API y esquemas según tu región/servicio.
+    </div>
+  </main>
+</div>
+
+<div class="btns">
+  <button class="btn" onclick="document.body.dataset.theme = (document.body.dataset.theme === 'light' ? 'dark' : 'light')">🌗 Modo</button>
+  <button class="btn" onclick="window.print()">🖨️ Imprimir</button>
+  <button class="btn" onclick="window.scrollTo({top:0, behavior:'smooth'})">⬆️ Arriba</button>
+</div>
+
+<script>
+function val(id){ return (document.getElementById(id).value || '').trim(); }
+function esc(str){ return str.replace(/\\/g,'\\\\').replace(/`/g,'\\`'); }
+function regen(){
+  const svc = val('svc') || 'mi-servicio-search';
+  const api = val('apiversion') || '2024-07-01';
+  const key = val('key') || '<SEARCH-ADMIN-KEY>';
+  const indexName = val('indexName') || 'docs-index';
+  const skillsetName = val('skillsetName') || 'docs-skillset';
+  const indexerName = val('indexerName') || 'docs-indexer';
+  const dsName = val('dsName') || 'docs-datasource';
+  const container = val('container') || 'documentos';
+  const dims = val('dims') || '1536';
+  const conn = val('conn') || 'DefaultEndpointsProtocol=...';
+  const aoai = val('aoaiEndpoint') || 'https://mi-aoai.openai.azure.com/';
+  const aoaiApi = val('aoaiApiVersion') || '2024-05-01-preview';
+  const emb = val('embeddingDeployment') || 'text-embedding-ada-002';
+  const cogKey = val('cogKey') || '<COGNITIVE-SERVICES-KEY>';
+
+  const endpoint = `https://${svc}.search.windows.net`;
+
+  // 3) INDEX
+  const indexJson = {
+    "name": indexName,
+    "fields": [
+      {"name":"id","type":"Edm.String","key":true,"filterable":true,"sortable":true},
+      {"name":"title","type":"Edm.String","searchable":true},
+      {"name":"content","type":"Edm.String","searchable":true},
+      {"name":"source","type":"Edm.String","filterable":true,"facetable":true},
+      {"name":"tags","type":"Collection(Edm.String)","filterable":true,"facetable":true},
+      {"name":"vector","type":"Collection(Edm.Single)","searchable":false,"retrievable":true,"dimensions": Number(dims), "vectorSearchProfile":"vprofile"}
+    ],
+    "vectorSearch": {
+      "algorithms":[{"name":"hnswAlgo","kind":"hnsw","parameters":{"m":4,"efConstruction":400,"metric":"cosine"}}],
+      "profiles":[{"name":"vprofile","algorithm":"hnswAlgo"}]
+    },
+    "semantic": {
+      "configurations":[{
+        "name":"semconfig",
+        "prioritizedFields":{
+          "titleField":{"fieldName":"title"},
+          "contentFields":[{"fieldName":"content"}]
+        }
+      }]
+    }
+  };
+
+  const indexCurl = `curl -X PUT "${endpoint}/indexes/${indexName}?api-version=${api}" \\
+  -H "Content-Type: application/json" \\
+  -H "api-key: ${key}" \\
+  -d '${JSON.stringify(indexJson, null, 2)}'`;
+
+  // 4) SKILLSET
+  const skillsetJson = {
+    "name": skillsetName,
+    "description": "Extrae frases clave/entidades y genera embeddings para content",
+    "skills": [
+      {
+        "@odata.type":"#Microsoft.Skills.Text.KeyPhraseExtractionSkill",
+        "context":"/document",
+        "inputs":[{"name":"text","source":"/document/content"}],
+        "outputs":[{"name":"keyPhrases","targetName":"keyPhrases"}]
+      },
+      {
+        "@odata.type":"#Microsoft.Skills.Text.EntityRecognitionSkill",
+        "context":"/document",
+        "inputs":[{"name":"text","source":"/document/content"}],
+        "outputs":[{"name":"entities","targetName":"entities"}]
+      },
+      {
+        "@odata.type":"#Microsoft.Skills.Text.AzureOpenAIEmbeddingSkill",
+        "context":"/document",
+        "description":"Embeddings para el campo content",
+        "inputs":[{"name":"text","source":"/document/content"}],
+        "outputs":[{"name":"embedding","targetName":"contentVector"}],
+        "resourceUri": aoai,
+        "deploymentName": emb,
+        "dimensions": Number(dims)
+      }
+    ],
+    "cognitiveServices": {
+      "@odata.type": "#Microsoft.Azure.Search.CognitiveServicesByKey",
+      "description": "Recurso multiservicio para enriquecimientos",
+      "key": cogKey
+    }
+  };
+
+  const skillsetCurl = `curl -X PUT "${endpoint}/skillsets/${skillsetName}?api-version=${api}" \\
+  -H "Content-Type: application/json" \\
+  -H "api-key: ${key}" \\
+  -d '${JSON.stringify(skillsetJson, null, 2)}'`;
+
+  // 5) DATA SOURCE
+  const dsJson = {
+    "name": dsName,
+    "type": "azureblob",
+    "credentials": { "connectionString": conn },
+    "container": { "name": container }
+  };
+
+  const dsCurl = `curl -X PUT "${endpoint}/datasources/${dsName}?api-version=${api}" \\
+  -H "Content-Type: application/json" \\
+  -H "api-key: ${key}" \\
+  -d '${JSON.stringify(dsJson, null, 2)}'`;
+
+  // 6) INDEXER
+  const indexerJson = {
+    "name": indexerName,
+    "dataSourceName": dsName,
+    "targetIndexName": indexName,
+    "skillsetName": skillsetName,
+    "fieldMappings": [
+      {"sourceFieldName":"metadata_storage_name","targetFieldName":"id"}
+    ],
+    "outputFieldMappings":[
+      {"sourceFieldName":"/document/content","targetFieldName":"content"},
+      {"sourceFieldName":"/document/metadata_storage_path","targetFieldName":"source"},
+      {"sourceFieldName":"/document/keyPhrases","targetFieldName":"tags"},
+      {"sourceFieldName":"/document/contentVector","targetFieldName":"vector"}
+    ],
+    "parameters": {
+      "configuration": {
+        "dataToExtract":"contentAndMetadata",
+        "parsingMode":"default",
+        "imageAction":"generateNormalizedImages",
+        "allowSkillsetToReadFileData": true
+      }
+    }
+  };
+
+  const indexerCurl = `curl -X PUT "${endpoint}/indexers/${indexerName}?api-version=${api}" \\
+  -H "Content-Type: application/json" \\
+  -H "api-key: ${key}" \\
+  -d '${JSON.stringify(indexerJson, null, 2)}'`;
+
+  // 7) RUN & STATUS
+  const runCurl = `# Ejecutar indexer
+curl -X POST "${endpoint}/indexers/${indexerName}/run?api-version=${api}" -H "api-key: ${key}"
+
+# Obtener estado
+curl -X GET "${endpoint}/indexers/${indexerName}/status?api-version=${api}" -H "api-key: ${key}"`;
+
+  // 8.1 EMBEDDING para la consulta
+  const embedCurl = `# Obtén embedding de la pregunta (Azure OpenAI)
+curl -X POST "${aoai}openai/deployments/${emb}/embeddings?api-version=${aoaiApi}" \\
+  -H "Content-Type: application/json" \\
+  -H "api-key: <AOAI-KEY>" \\
+  -d '{ "input": "¿Cuál es la reseña del Hotel Buckingham de Londres?" }'`;
+
+  // 8.2 HYBRID SEARCH
+  const hybridBody = {
+    "search": "Hotel Buckingham reseña",
+    "vectors": [
+      { "value": [/* pega aquí el vector devuelto por embeddings */], "fields": "vector", "k": 5, "profile":"vprofile" }
+    ],
+    "top": 5,
+    "select": "id,title,source,content",
+    "semanticConfiguration": "semconfig",
+    "queryType": "semantic",
+    "captions": "extractive",
+    "answers": "extractive|count-3"
+  };
+
+  const searchCurl = `curl -X POST "${endpoint}/indexes/${indexName}/docs/search?api-version=${api}" \\
+  -H "Content-Type: application/json" \\
+  -H "api-key: ${key}" \\
+  -d '${JSON.stringify(hybridBody, null, 2)}'`;
+
+  // Fill code blocks
+  document.getElementById('code-index').textContent = indexCurl;
+  document.getElementById('code-skillset').textContent = skillsetCurl;
+  document.getElementById('code-ds').textContent = dsCurl;
+  document.getElementById('code-indexer').textContent = indexerCurl;
+  document.getElementById('code-run').textContent = runCurl;
+  document.getElementById('code-embed').textContent = embedCurl;
+  document.getElementById('code-search').textContent = searchCurl;
+}
+
+// Copy helper
+function copyCode(id){
+  const el = document.getElementById(id);
+  if(!el) return;
+  const text = el.textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn = el.parentElement.querySelector('.copy');
+    if(btn){ btn.textContent = 'Copiado ✔'; setTimeout(()=>btn.textContent='Copiar',1500); }
+  });
+}
+
+// First render
+window.addEventListener('DOMContentLoaded', regen);
+</script>
+</body>
+</html>

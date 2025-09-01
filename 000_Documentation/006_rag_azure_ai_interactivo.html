@@ -1,0 +1,296 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RAG (Retrieval‑Augmented Generation) en Azure — Guía Interactiva</title>
+<style>
+:root{
+  --bg:#0b0f14; --panel:#111826; --text:#e6edf3; --muted:#9fb0c0;
+  --accent:#22d3ee; --accent2:#a78bfa; --border:#1f2937;
+  --ok:#10b981; --warn:#f59e0b; --danger:#ef4444;
+  --shadow:0 10px 30px rgba(0,0,0,.25);
+}
+[data-theme="light"]{
+  --bg:#f7fafc; --panel:#ffffff; --text:#0b1220; --muted:#475569;
+  --accent:#06b6d4; --accent2:#7c3aed; --border:#e5e7eb;
+  --ok:#059669; --warn:#b45309; --danger:#b91c1c;
+  --shadow:0 10px 30px rgba(0,0,0,.08);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+.container{display:grid;grid-template-columns:300px 1fr;min-height:100vh}
+aside{position:sticky;top:0;height:100vh;padding:22px 16px;border-right:1px solid var(--border);background:linear-gradient(180deg,var(--panel),rgba(0,0,0,0))}
+.logo{font-weight:800;font-size:1.25rem;margin-bottom:6px}
+.subtitle{color:var(--muted);font-size:.95rem;margin-bottom:16px}
+nav a{display:block;padding:9px 10px;margin:6px 0;border-radius:12px;text-decoration:none;color:var(--text);border:1px solid transparent}
+nav a:hover{border-color:var(--border);background:rgba(34,211,238,.10)}
+.badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:.8rem;border:1px solid var(--border);color:var(--muted)}
+.flex{display:flex;gap:8px;flex-wrap:wrap}
+main{padding:36px 28px;max-width:1180px}
+h1{margin:0 0 6px;font-size:2rem}
+h2{margin-top:28px;font-size:1.35rem}
+h3{margin-top:18px;font-size:1.05rem;color:var(--muted)}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);padding:18px;margin:18px 0}
+.grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.95rem}
+th,td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+th{text-align:left;color:var(--muted)}
+.hint{background:linear-gradient(180deg,rgba(34,211,238,.10),rgba(34,211,238,.03));border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-top:10px}
+.btns{position:fixed;right:16px;bottom:16px;display:flex;gap:10px}
+.btn{background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:10px 12px;cursor:pointer;box-shadow:var(--shadow)}
+.btn:hover{filter:brightness(1.05)}
+.caption{color:var(--muted);font-size:.9rem;margin-top:6px}
+svg{width:100%;height:auto;border-radius:12px;border:1px solid var(--border);background:linear-gradient(180deg,rgba(34,211,238,.08),rgba(34,211,238,.03))}
+details{border:1px dashed var(--border);border-radius:12px;padding:10px 12px}
+mark{background:rgba(34,211,238,.22);padding:1px 4px;border-radius:6px}
+.footer{color:var(--muted);font-size:.9rem;margin-top:30px;border-top:1px dashed var(--border);padding-top:12px}
+.code{background:#0b1220;border:1px solid var(--border);border-radius:12px;padding:12px;overflow:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9rem}
+.small{font-size:.9rem;color:var(--muted)}
+kbd{background:#0b1220;border:1px solid var(--border);border-radius:6px;padding:1px 5px}
+.badge-ok{color:var(--ok);border-color:rgba(16,185,129,.35)}
+.badge-warn{color:var(--warn);border-color:rgba(245,158,11,.35)}
+</style>
+</head>
+<body data-theme="dark">
+<div class="container">
+  <aside>
+    <div class="logo">RAG en Azure</div>
+    <div class="subtitle">Guía visual + práctica</div>
+    <nav>
+      <a href="#resumen">1. Resumen</a>
+      <a href="#flujo">2. Diagrama R→A→G</a>
+      <a href="#arquitectura">3. Arquitectura en Azure</a>
+      <a href="#ingesta">4. Ingesta & chunking</a>
+      <a href="#consulta">5. Consulta & prompt</a>
+      <a href="#eval">6. Evaluación y calidad</a>
+      <a href="#check">7. Checklist</a>
+    </nav>
+    <div class="hint">
+      <strong>Tip:</strong> Usa <em>Imprimir</em> para exportar a PDF y 🌗 para alternar tema.
+    </div>
+    <div class="flex" style="margin-top:10px">
+      <span class="badge">Embeddings</span>
+      <span class="badge">Vector Search</span>
+      <span class="badge">Azure AI Search</span>
+      <span class="badge">LLM</span>
+    </div>
+  </aside>
+
+  <main>
+    <header>
+      <h1>RAG (Retrieval‑Augmented Generation) — HTML Interactivo</h1>
+      <p class="subtitle">Combina recuperación semántica + prompts aumentados para responder con <em>tus datos</em> de forma privada y trazable.</p>
+    </header>
+
+    <section id="resumen" class="card">
+      <h2>1) Resumen</h2>
+      <p><strong>RAG</strong> conecta un motor de recuperación (búsqueda vectorial) con un LLM para que responda usando fragmentos de tus documentos. Beneficios: mejor precisión, menos alucinaciones, y privacidad (los datos permanecen en tu entorno).</p>
+    </section>
+
+    <section id="flujo" class="card">
+      <h2>2) Diagrama de flujo (R → A → G)</h2>
+      <figure>
+        <svg viewBox="0 0 1120 520" role="img" aria-label="Flujo RAG: Recuperación → Aumento → Generación">
+          <defs>
+            <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <polygon points="0 0, 6 3, 0 6" fill="currentColor"/>
+            </marker>
+          </defs>
+          <rect x="40" y="40" width="1040" height="440" rx="16" ry="16" fill="rgba(17,24,39,.45)" stroke="var(--border)"/>
+          <text x="56" y="62" fill="var(--muted)" style="font-size:13px">Ejecución de RAG</text>
+
+          <!-- Usuario -->
+          <rect x="70" y="130" width="210" height="80" rx="12" ry="12" fill="rgba(34,211,238,.25)" stroke="var(--border)"/>
+          <text x="140" y="175" fill="currentColor" style="font-weight:700">Usuario</text>
+          <text x="92" y="220" fill="currentColor" style="font-size:13px">Consulta natural</text>
+
+          <!-- Recuperación -->
+          <rect x="320" y="90" width="270" height="110" rx="12" ry="12" fill="rgba(34,211,238,.25)" stroke="var(--border)"/>
+          <text x="350" y="120" fill="currentColor" style="font-weight:700">Recuperación</text>
+          <text x="350" y="140" fill="currentColor" style="font-size:13px">Embeddings + Vector Search</text>
+          <text x="350" y="158" fill="currentColor" style="font-size:13px">Top‑k fragmentos relevantes</text>
+
+          <!-- Aumento -->
+          <rect x="320" y="240" width="270" height="110" rx="12" ry="12" fill="rgba(167,139,250,.25)" stroke="var(--border)"/>
+          <text x="350" y="270" fill="currentColor" style="font-weight:700">Aumento</text>
+          <text x="350" y="290" fill="currentColor" style="font-size:13px">Construcción de prompt</text>
+          <text x="350" y="308" fill="currentColor" style="font-size:13px">Inyección de fragmentos + citas</text>
+
+          <!-- Generación -->
+          <rect x="630" y="160" width="250" height="110" rx="12" ry="12" fill="rgba(34,197,94,.25)" stroke="var(--border)"/>
+          <text x="690" y="190" fill="currentColor" style="font-weight:700">Generación (LLM)</text>
+          <text x="660" y="210" fill="currentColor" style="font-size:13px">Responde usando el contexto</text>
+
+          <!-- Respuesta -->
+          <rect x="920" y="130" width="140" height="80" rx="12" ry="12" fill="rgba(34,211,238,.25)" stroke="var(--border)"/>
+          <text x="948" y="175" fill="currentColor" style="font-weight:700">Respuesta</text>
+
+          <!-- Flechas -->
+          <line x1="280" y1="170" x2="320" y2="145" stroke="currentColor" marker-end="url(#arrow)"/>
+          <line x1="280" y1="170" x2="320" y2="295" stroke="currentColor" marker-end="url(#arrow)"/>
+          <line x1="590" y1="145" x2="630" y2="190" stroke="currentColor" marker-end="url(#arrow)"/>
+          <line x1="870" y1="210" x2="920" y2="170" stroke="currentColor" marker-end="url(#arrow)"/>
+
+          <!-- Índice y documentos -->
+          <rect x="70" y="340" width="210" height="110" rx="12" ry="12" fill="rgba(34,211,238,.25)" stroke="var(--border)"/>
+          <text x="115" y="372" fill="currentColor" style="font-weight:700">Índice Vectorial</text>
+          <text x="92" y="392" fill="currentColor" style="font-size:13px">Azure AI Search</text>
+          <text x="92" y="410" fill="currentColor" style="font-size:13px">Embeddings de docs</text>
+
+          <rect x="320" y="370" width="270" height="60" rx="12" ry="12" fill="rgba(34,211,238,.25)" stroke="var(--border)"/>
+          <text x="350" y="405" fill="currentColor" style="font-weight:700">Top‑k chunks</text>
+
+          <line x1="180" y1="340" x2="450" y2="370" stroke="currentColor" marker-end="url(#arrow)"/>
+          <line x1="455" y1="370" x2="455" y2="345" stroke="currentColor" marker-end="url(#arrow)"/>
+        </svg>
+        <figcaption class="caption">R‑Recuperar fragmentos relevantes → A‑Aumentar el prompt con esos fragmentos → G‑Generar una respuesta con citas.</figcaption>
+      </figure>
+    </section>
+
+    <section id="arquitectura" class="card">
+      <h2>3) Arquitectura en Azure (alto nivel)</h2>
+      <table>
+        <thead><tr><th>Componente</th><th>Rol</th><th>Notas</th></tr></thead>
+        <tbody>
+          <tr><td>Azure AI Search</td><td>Índice vectorial y filtrado</td><td>Indexa PDF/DOCX/HTML; soporta BM25 + vector search; filtros por metadatos.</td></tr>
+          <tr><td>Embeddings</td><td>Vectores de consulta y documentos</td><td>Modelo de embeddings (ej. text-embedding); mismos hiperparámetros para consulta y doc.</td></tr>
+          <tr><td>Almacenamiento</td><td>Origen de datos</td><td>Blob/SharePoint/OneDrive/Fabric; controla acceso y versiones.</td></tr>
+          <tr><td>LLM</td><td>Generación</td><td>Redacta respuestas usando el contexto recuperado; aplica instrucciones y formato.</td></tr>
+          <tr><td>Orquestación</td><td>Flujo R→A→G</td><td>Encapsula chunking, consulta top‑k, plantillas de prompt y post‑procesado.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="ingesta" class="card">
+      <h2>4) Ingesta & Chunking</h2>
+      <div class="grid-2">
+        <div>
+          <h3>Pipeline de ingesta</h3>
+          <ol>
+            <li>Extrae texto + metadatos (título, autor, fecha).</li>
+            <li><strong>Chunking</strong> (por longitud semántica: 200–500 tokens, con solapamiento 10–20%).</li>
+            <li>Genera embeddings para cada chunk.</li>
+            <li>Indexa en Azure AI Search (campos: <code>content</code>, <code>vector</code>, <code>metadata</code>).</li>
+          </ol>
+        </div>
+        <div>
+          <h3>Consejos</h3>
+          <ul>
+            <li><span class="badge badge-ok">OK</span> Mantén chunks auto‑contenidos y con <em>breadcrumbs</em> (ruta, página).</li>
+            <li><span class="badge badge-ok">OK</span> Normaliza texto (quitar artefactos, tablas a texto).</li>
+            <li><span class="badge badge-warn">Cuidado</span> Chunks gigantes → ruido; chunks mínimos → contexto insuficiente.</li>
+          </ul>
+        </div>
+      </div>
+      <details style="margin-top:10px">
+        <summary>Esquema sugerido del índice</summary>
+        <pre class="code">{
+  "id": "string",
+  "content": "string",
+  "vector": "float[]",
+  "title": "string",
+  "source": "string",   // url/ruta/página
+  "created_at": "datetime",
+  "tags": "string[]"
+}</pre>
+      </details>
+    </section>
+
+    <section id="consulta" class="card">
+      <h2>5) Consulta & Prompt aumentado</h2>
+      <div class="grid-2">
+        <div>
+          <h3>Consulta híbrida</h3>
+          <ul>
+            <li>Convierte la pregunta a <strong>embedding</strong> y busca por similitud (top‑k).</li>
+            <li>Combina con BM25/keyword cuando haga falta (consulta híbrida).</li>
+            <li>Aplica filtros por metadatos (fecha, tipo, etiqueta).</li>
+          </ul>
+          <h3>Plantilla de prompt</h3>
+          <pre class="code">Sistema: Eres un asistente que responde SOLO con la info
+del contexto. Si no hay evidencia suficiente, di "no encontrado".
+
+Usuario: {pregunta}
+
+Contexto (fragmentos con fuente):
+1) {texto_1} (fuente: {src_1})
+2) {texto_2} (fuente: {src_2})
+...</pre>
+        </div>
+        <div>
+          <h3>Post‑procesado</h3>
+          <ul>
+            <li>Formatea respuestas con <strong>citas</strong> (enlaces a <code>source</code>).</li>
+            <li>Deduplica fragmentos y verifica consistencia temporal.</li>
+            <li>Limita longitud y evita extrapolar fuera del contexto.</li>
+          </ul>
+          <h3>Pseudocódigo</h3>
+          <pre class="code">q_vec = embed(query)
+hits = search.hybrid(query, q_vec, k=5, filters=...)
+ctx = render(hits)   # texto + fuentes
+answer = llm.complete(prompt(ctx, query))
+return answer</pre>
+        </div>
+      </div>
+    </section>
+
+    <section id="eval" class="card">
+      <h2>6) Evaluación, seguridad y costos</h2>
+      <div class="grid-2">
+        <div>
+          <h3>Métricas</h3>
+          <ul>
+            <li><strong>Groundedness</strong>: % de frases soportadas por contexto.</li>
+            <li><strong>Answer Relevance</strong>: pertinencia vs. consulta.</li>
+            <li><strong>Context Precision/Recall</strong>: calidad de recuperación.</li>
+          </ul>
+          <h3>Seguridad</h3>
+          <ul>
+            <li>Filtra PII y aplica controles de acceso por documento.</li>
+            <li>Registra consultas y cita fuentes para auditoría.</li>
+            <li>Define políticas “no alucinar”: responde “no encontrado”.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Costos</h3>
+          <ul>
+            <li>Optimiza <strong>k</strong> (top‑k) y <strong>tamaño de chunk</strong> para reducir tokens.</li>
+            <li>Cachea embeddings y resultados frecuentes.</li>
+            <li>Batch en ingesta; compresión ligera del contexto.</li>
+          </ul>
+          <h3>Errores comunes</h3>
+          <ul>
+            <li>Prompt sin instrucciones claras → extrapolaciones.</li>
+            <li>Índice sin metadatos → imposible filtrar.</li>
+            <li>Embeddings desalineados (modelos distintos) → malas coincidencias.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="check" class="card">
+      <h2>7) Checklist</h2>
+      <ul>
+        <li>Pipeline de ingesta con chunking coherente + metadatos.</li>
+        <li>Embeddings consistentes para documentos y consultas.</li>
+        <li>Índice en Azure AI Search con búsqueda híbrida y filtros.</li>
+        <li>Prompt aumentado con contexto y política de “no encontrado”.</li>
+        <li>Observabilidad (logs, métricas) y pruebas con set dorado.</li>
+      </ul>
+    </section>
+
+    <div class="footer">
+      Hecho para estudio personal. Personalízalo para tus cursos o documentación.
+    </div>
+  </main>
+</div>
+
+<div class="btns">
+  <button class="btn" onclick="document.body.dataset.theme = (document.body.dataset.theme === 'light' ? 'dark' : 'light')">🌗 Modo</button>
+  <button class="btn" onclick="window.print()">🖨️ Imprimir</button>
+  <button class="btn" onclick="window.scrollTo({top:0, behavior:'smooth'})">⬆️ Arriba</button>
+</div>
+</body>
+</html>

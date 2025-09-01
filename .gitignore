@@ -1,0 +1,30 @@
+# Environment variables
+.env
+*.env
+**/.env
+.env.*
+.env.local
+
+# Python
+__pycache__/
+*.py[cod]
+.Python
+venv/
+.venv/
+ENV/
+
+# Python packaging - AGREGA ESTAS LÍNEAS
+*.egg-info/
+*.egg
+dist/
+build/
+*.whl
+Azure_AI_Agent_Service.egg-info/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

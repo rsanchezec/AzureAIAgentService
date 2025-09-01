@@ -1,0 +1,304 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SDK Azure AI Foundry — Resumen Interactivo</title>
+<style>
+:root{
+  --bg:#0b0f14; --panel:#111826; --text:#e6edf3; --muted:#9fb0c0;
+  --accent:#06b6d4; --accent2:#a78bfa; --border:#1f2937;
+  --ok:#10b981; --warn:#f59e0b; --danger:#ef4444;
+  --shadow:0 10px 30px rgba(0,0,0,.25);
+}
+[data-theme="light"]{
+  --bg:#f7fafc; --panel:#ffffff; --text:#0b1220; --muted:#475569;
+  --accent:#0891b2; --accent2:#7c3aed; --border:#e5e7eb;
+  --ok:#059669; --warn:#b45309; --danger:#b91c1c;
+  --shadow:0 10px 30px rgba(0,0,0,.08);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+.container{display:grid;grid-template-columns:300px 1fr;min-height:100vh}
+aside{position:sticky;top:0;height:100vh;padding:22px 16px;border-right:1px solid var(--border);background:linear-gradient(180deg,var(--panel),rgba(0,0,0,0))}
+.logo{font-weight:800;font-size:1.25rem;margin-bottom:6px}
+.subtitle{color:var(--muted);font-size:.95rem;margin-bottom:16px}
+nav a{display:block;padding:9px 10px;margin:6px 0;border-radius:12px;text-decoration:none;color:var(--text);border:1px solid transparent}
+nav a:hover{border-color:var(--border);background:rgba(6,182,212,.10)}
+.badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:.8rem;border:1px solid var(--border);color:var(--muted)}
+.flex{display:flex;gap:8px;flex-wrap:wrap}
+main{padding:36px 28px;max-width:1180px}
+h1{margin:0 0 6px;font-size:2rem}
+h2{margin-top:28px;font-size:1.35rem}
+h3{margin-top:18px;font-size:1.05rem;color:var(--muted)}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);padding:18px;margin:18px 0}
+.grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.95rem}
+th,td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+th{text-align:left;color:var(--muted)}
+.kbd{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:#0b1220;color:#e6edf3;border:1px solid var(--border);padding:2px 6px;border-radius:6px}
+.hint{background:linear-gradient(180deg,rgba(6,182,212,.10),rgba(6,182,212,.03));border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-top:10px}
+.btns{position:fixed;right:16px;bottom:16px;display:flex;gap:10px}
+.btn{background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:10px 12px;cursor:pointer;box-shadow:var(--shadow)}
+.btn:hover{filter:brightness(1.05)}
+.caption{color:var(--muted);font-size:.9rem;margin-top:6px}
+svg{width:100%;height:auto;border-radius:12px;border:1px solid var(--border);background:linear-gradient(180deg,rgba(6,182,212,.08),rgba(6,182,212,.03))}
+details{border:1px dashed var(--border);border-radius:12px;padding:10px 12px}
+mark{background:rgba(6,182,212,.22);padding:1px 4px;border-radius:6px}
+.footer{color:var(--muted);font-size:.9rem;margin-top:30px;border-top:1px dashed var(--border);padding-top:12px}
+.code{background:#0b1220;border:1px solid var(--border);border-radius:12px;padding:12px;overflow:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9rem}
+</style>
+</head>
+<body data-theme="dark">
+<div class="container">
+  <aside>
+    <div class="logo">SDK Azure AI Foundry</div>
+    <div class="subtitle">Cómo empezó → cómo va</div>
+    <nav>
+      <a href="#resumen">1. Resumen</a>
+      <a href="#timeline">2. Línea de tiempo</a>
+      <a href="#resuelve">3. ¿Qué resuelve?</a>
+      <a href="#comparativa">4. Comparativa</a>
+      <a href="#capacidades">5. Capacidades clave</a>
+      <a href="#instalacion">6. Instalación</a>
+      <a href="#arquitectura">7. Arquitectura de referencia</a>
+      <a href="#buenas">8. Buenas prácticas</a>
+      <a href="#checklist">9. Checklist de adopción</a>
+    </nav>
+    <div class="hint">
+      <strong>Tip:</strong> Usa <em>Imprimir</em> para exportar a PDF y el botón 🌗 para alternar tema.
+    </div>
+    <div class="flex" style="margin-top:10px">
+      <span class="badge">Chat Completions</span>
+      <span class="badge">Assistants API</span>
+      <span class="badge">Foundry SDK</span>
+      <span class="badge">RAG</span>
+    </div>
+  </aside>
+
+  <main>
+    <header>
+      <h1>SDK Azure AI Foundry — Resumen Interactivo</h1>
+      <p class="subtitle">De APIs fragmentadas a un SDK unificado para crear agentes y apps de IA con menos código y más control.</p>
+    </header>
+
+    <section id="resumen" class="card">
+      <h2>1) Resumen</h2>
+      <p>El <strong>SDK de Azure AI Foundry</strong> unifica capacidades que antes requerían múltiples APIs (Chat Completions, Assistants), permitiendo crear <em>agentes</em> y aplicaciones de IA con menos código, acceso multi‑modelo, integración nativa con servicios Azure y herramientas de calidad (evaluación/depuración).</p>
+    </section>
+
+    <section id="timeline" class="card">
+      <h2>2) Línea de tiempo — Cómo empezó → cómo va</h2>
+      <figure>
+        <svg viewBox="0 0 1080 280" role="img" aria-label="Línea de tiempo de evolución: Chat Completions → Assistants API → Foundry SDK">
+          <defs>
+            <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <polygon points="0 0, 6 3, 0 6" fill="currentColor"/>
+            </marker>
+          </defs>
+          <!-- Axis -->
+          <line x1="60" y1="140" x2="1020" y2="140" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow)"/>
+          <text x="980" y="130" fill="var(--muted)" style="font-size:12px">Ahora</text>
+
+          <!-- Milestone 1 -->
+          <circle cx="240" cy="140" r="10" fill="rgba(6,182,212,.6)"/>
+          <rect x="140" y="30" width="200" height="90" rx="12" ry="12" fill="rgba(6,182,212,.18)" stroke="var(--border)"/>
+          <text x="160" y="60" fill="currentColor" style="font-weight:700">Etapa 1: Chat Completions</text>
+          <text x="160" y="80" fill="currentColor" style="font-size:13px">Chat ida y vuelta con GPT</text>
+          <text x="160" y="95" fill="currentColor" style="font-size:13px">Alto costo y ROI limitado</text>
+
+          <!-- Milestone 2 -->
+          <circle cx="540" cy="140" r="10" fill="rgba(6,182,212,.6)"/>
+          <rect x="440" y="170" width="200" height="90" rx="12" ry="12" fill="rgba(6,182,212,.18)" stroke="var(--border)"/>
+          <text x="460" y="200" fill="currentColor" style="font-weight:700">Etapa 2: Assistants API</text>
+          <text x="460" y="220" fill="currentColor" style="font-size:13px">Tipo agente con GPT</text>
+          <text x="460" y="235" fill="currentColor" style="font-size:13px">Código complejo, solo GPT</text>
+
+          <!-- Milestone 3 -->
+          <circle cx="840" cy="140" r="10" fill="rgba(6,182,212,.6)"/>
+          <rect x="740" y="30" width="220" height="90" rx="12" ry="12" fill="rgba(6,182,212,.18)" stroke="var(--border)"/>
+          <text x="760" y="60" fill="currentColor" style="font-weight:700">Etapa 3: Foundry SDK</text>
+          <text x="760" y="80" fill="currentColor" style="font-size:13px">Unificado, multi‑modelo</text>
+          <text x="760" y="95" fill="currentColor" style="font-size:13px">Menos código, +integraciones</text>
+        </svg>
+        <figcaption class="caption">El SDK Foundry hereda lo útil de Assistants y añade multi‑modelo, RAG y orquestación limpia.</figcaption>
+      </figure>
+    </section>
+
+    <section id="resuelve" class="card">
+      <h2>3) ¿Qué resuelve el SDK?</h2>
+      <ul>
+        <li><strong>Fragmentación</strong> → interfaz única para modelos y herramientas.</li>
+        <li><strong>Complejidad</strong> → menos líneas de código para flujos típicos de agentes.</li>
+        <li><strong>Vendor lock‑in</strong> → soporte para múltiples proveedores de modelos.</li>
+        <li><strong>Productividad</strong> → utilidades de evaluación, depuración y mejores prácticas.</li>
+      </ul>
+    </section>
+
+    <section id="comparativa" class="card">
+      <h2>4) Comparativa</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Aspecto</th>
+            <th>Chat Completions</th>
+            <th>Assistants API</th>
+            <th>Azure AI Foundry SDK</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Modelo</td>
+            <td>GPT (chat básico)</td>
+            <td>GPT (tipo agente)</td>
+            <td>GPT + Llama + Mistral + otros</td>
+          </tr>
+          <tr>
+            <td>Orquestación</td>
+            <td>Manual (stateless)</td>
+            <td>Parcial: funciones/archivos/código</td>
+            <td>Clara, extensible, con agentes/servicios</td>
+          </tr>
+          <tr>
+            <td>Integraciones</td>
+            <td>Ad-hoc</td>
+            <td>Funciones, archivos, code‑interpreter</td>
+            <td>AI Search, Functions, Logic Apps, OpenAPI, Bing…</td>
+          </tr>
+          <tr>
+            <td>Complejidad de código</td>
+            <td>Media (prompt + historial)</td>
+            <td>Alta (estructura verbosa)</td>
+            <td>Baja (SDK unificado)</td>
+          </tr>
+          <tr>
+            <td>RAG/Datos privados</td>
+            <td>Manual</td>
+            <td>Limitado</td>
+            <td>Nativo con Azure AI Search/Files</td>
+          </tr>
+          <tr>
+            <td>Evaluación/Depuración</td>
+            <td>No incluido</td>
+            <td>Básico</td>
+            <td>Conjuntos de herramientas incluidos</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="capacidades" class="card">
+      <h2>5) Capacidades clave</h2>
+      <div class="grid-2">
+        <div>
+          <ul>
+            <li>Acceso multi‑modelo (OpenAI, Meta, Mistral, HF…).</li>
+            <li>Integración nativa con servicios Azure.</li>
+            <li>Herramientas de <strong>conocimiento</strong> (RAG) y de <strong>acción</strong> (Functions/Logic Apps).</li>
+          </ul>
+        </div>
+        <div>
+          <ul>
+            <li>Evaluación y depuración para calidad/seguridad.</li>
+            <li>Menos código → mayor velocidad de entrega.</li>
+            <li>Encaje natural para <em>agentes</em> y sistemas compuestos.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="instalacion" class="card">
+      <h2>6) Instalación (Python)</h2>
+      <pre class="code"># Terminal
+pip install azure-ai-projects
+
+# (Sugerido) Crear y activar venv/uv/poetry según tu flujo
+# python -m venv .venv && source .venv/bin/activate  (Linux/macOS)
+# .venv\Scripts\Activate.ps1                            (Windows PowerShell)</pre>
+      <details style="margin-top:8px">
+        <summary>Nota</summary>
+        El documento es conceptual. API y nombres pueden cambiar: revisa tus versiones del paquete en tu entorno antes de producir.
+      </details>
+    </section>
+
+    <section id="arquitectura" class="card">
+      <h2>7) Arquitectura de referencia (alto nivel)</h2>
+      <figure>
+        <svg viewBox="0 0 1080 460" role="img" aria-label="Arquitectura de referencia con Foundry SDK: orquestación, LLM, conocimiento, acción">
+          <rect x="30" y="30" width="1020" height="400" rx="16" ry="16" fill="rgba(17,24,39,.45)" stroke="var(--border)"/>
+          <text x="46" y="54" fill="var(--muted)" style="font-size:13px">Aplicación basada en SDK Foundry</text>
+
+          <rect x="70" y="90" width="260" height="90" rx="12" ry="12" fill="rgba(6,182,212,.25)" stroke="var(--border)"/>
+          <text x="110" y="120" fill="currentColor" style="font-weight:700">Orquestación</text>
+          <text x="90" y="140" fill="currentColor" style="font-size:13px">Agentes/planificación/memoria</text>
+
+          <rect x="360" y="90" width="240" height="90" rx="12" ry="12" fill="rgba(167,139,250,.25)" stroke="var(--border)"/>
+          <text x="430" y="120" fill="currentColor" style="font-weight:700">LLM</text>
+          <text x="380" y="140" fill="currentColor" style="font-size:13px">GPT, Llama, Mistral, otros</text>
+
+          <rect x="630" y="90" width="380" height="90" rx="12" ry="12" fill="rgba(6,182,212,.25)" stroke="var(--border)"/>
+          <text x="660" y="120" fill="currentColor" style="font-weight:700">Memoria/Estado</text>
+          <text x="660" y="140" fill="currentColor" style="font-size:13px">Historial, preferencias, almacenes</text>
+
+          <rect x="90" y="220" width="300" height="90" rx="12" ry="12" fill="rgba(6,182,212,.25)" stroke="var(--border)"/>
+          <text x="110" y="250" fill="currentColor" style="font-weight:700">Conocimiento (RAG)</text>
+          <text x="110" y="270" fill="currentColor" style="font-size:13px">AI Search, Files, Bing, Fabric</text>
+
+          <rect x="420" y="220" width="300" height="90" rx="12" ry="12" fill="rgba(6,182,212,.25)" stroke="var(--border)"/>
+          <text x="440" y="250" fill="currentColor" style="font-weight:700">Acción</text>
+          <text x="440" y="270" fill="currentColor" style="font-size:13px">Functions, Logic Apps, OpenAPI</text>
+
+          <rect x="750" y="220" width="240" height="90" rx="12" ry="12" fill="rgba(6,182,212,.25)" stroke="var(--border)"/>
+          <text x="770" y="250" fill="currentColor" style="font-weight:700">Evaluación/Observabilidad</text>
+          <text x="770" y="270" fill="currentColor" style="font-size:13px">Pruebas, métricas, depuración</text>
+
+          <defs>
+            <marker id="arrow2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <polygon points="0 0, 6 3, 0 6" fill="currentColor"/>
+            </marker>
+          </defs>
+          <line x1="330" y1="135" x2="360" y2="135" stroke="currentColor" marker-end="url(#arrow2)"/>
+          <line x1="600" y1="135" x2="630" y2="135" stroke="currentColor" marker-end="url(#arrow2)"/>
+          <line x1="480" y1="180" x2="240" y2="220" stroke="currentColor" marker-end="url(#arrow2)"/>
+          <line x1="480" y1="180" x2="570" y2="220" stroke="currentColor" marker-end="url(#arrow2)"/>
+          <line x1="480" y1="180" x2="870" y2="220" stroke="currentColor" marker-end="url(#arrow2)"/>
+        </svg>
+        <figcaption class="caption">El SDK Foundry orquesta LLM, conocimiento y acción, con memoria y evaluación.</figcaption>
+      </figure>
+    </section>
+
+    <section id="buenas" class="card">
+      <h2>8) Buenas prácticas</h2>
+      <ul>
+        <li>Diseña primero el <em>flujo agentic</em> (herramientas, memoria, estados, errores).</li>
+        <li>Mide <strong>costo por tarea completada</strong>, no solo tokens.</li>
+        <li>Evita <em>hard‑coding</em> del plan: deja que el agente lo decida con límites.</li>
+        <li>Aísla secretos/credenciales y aplica <strong>principio de mínimo privilegio</strong>.</li>
+      </ul>
+    </section>
+
+    <section id="checklist" class="card">
+      <h2>9) Checklist de adopción</h2>
+      <ul>
+        <li>Selecciona modelos y región.</li>
+        <li>Define herramientas (RAG, APIs, Functions/Logic Apps).</li>
+        <li>Establece memoria/estado y límites de seguridad.</li>
+        <li>Prueba con datasets y <em>golden prompts</em>; instrumenta métricas.</li>
+      </ul>
+    </section>
+
+    <div class="footer">
+      Hecho para estudio personal. Personalízalo para tus cursos o documentación.
+    </div>
+  </main>
+</div>
+
+<div class="btns">
+  <button class="btn" onclick="document.body.dataset.theme = (document.body.dataset.theme === 'light' ? 'dark' : 'light')">🌗 Modo</button>
+  <button class="btn" onclick="window.print()">🖨️ Imprimir</button>
+  <button class="btn" onclick="window.scrollTo({top:0, behavior:'smooth'})">⬆️ Arriba</button>
+</div>
+</body>
+</html>

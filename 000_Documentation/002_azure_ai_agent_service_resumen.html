@@ -1,0 +1,395 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Azure AI Agent Service — Resumen Interactivo</title>
+<style>
+:root {
+  --bg:#0b0f14; --panel:#111826; --text:#e6edf3; --muted:#9fb0c0;
+  --accent:#7c3aed; --accent2:#22d3ee; --border:#1f2937;
+  --ok:#10b981; --warn:#f59e0b; --danger:#ef4444;
+  --shadow:0 10px 30px rgba(0,0,0,.25);
+}
+[data-theme="light"]{
+  --bg:#f7fafc; --panel:#ffffff; --text:#0b1220; --muted:#475569;
+  --accent:#6d28d9; --accent2:#0891b2; --border:#e5e7eb;
+  --ok:#059669; --warn:#b45309; --danger:#b91c1c;
+  --shadow:0 10px 30px rgba(0,0,0,.08);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+.container{display:grid;grid-template-columns:300px 1fr;min-height:100vh}
+aside{position:sticky;top:0;height:100vh;padding:22px 16px;border-right:1px solid var(--border);background:linear-gradient(180deg,var(--panel),rgba(0,0,0,0))}
+.logo{font-weight:800;font-size:1.25rem;margin-bottom:6px}
+.subtitle{color:var(--muted);font-size:.95rem;margin-bottom:16px}
+nav a{display:block;padding:9px 10px;margin:6px 0;border-radius:12px;text-decoration:none;color:var(--text);border:1px solid transparent}
+nav a:hover{border-color:var(--border);background:rgba(124,58,237,.08)}
+.badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:.8rem;border:1px solid var(--border);color:var(--muted)}
+.flex{display:flex;gap:8px;flex-wrap:wrap}
+main{padding:36px 28px;max-width:1180px}
+h1{margin:0 0 6px;font-size:2rem}
+h2{margin-top:28px;font-size:1.35rem}
+h3{margin-top:18px;font-size:1.05rem;color:var(--muted)}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);padding:18px;margin:18px 0}
+.grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:.95rem}
+th,td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+th{text-align:left;color:var(--muted)}
+.kbd{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:#0b1220;color:#e6edf3;border:1px solid var(--border);padding:2px 6px;border-radius:6px}
+.hint{background:linear-gradient(180deg,rgba(34,211,238,.10),rgba(34,211,238,.03));border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-top:10px}
+.btns{position:fixed;right:16px;bottom:16px;display:flex;gap:10px}
+.btn{background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:10px 12px;cursor:pointer;box-shadow:var(--shadow)}
+.btn:hover{filter:brightness(1.05)}
+.caption{color:var(--muted);font-size:.9rem;margin-top:6px}
+svg{width:100%;height:auto;border-radius:12px;border:1px solid var(--border);background:linear-gradient(180deg,rgba(124,58,237,.08),rgba(124,58,237,.03))}
+details{border:1px dashed var(--border);border-radius:12px;padding:10px 12px}
+mark{background:rgba(124,58,237,.22);padding:1px 4px;border-radius:6px}
+.footer{color:var(--muted);font-size:.9rem;margin-top:30px;border-top:1px dashed var(--border);padding-top:12px}
+.code{background:#0b1220;border:1px solid var(--border);border-radius:12px;padding:12px;overflow:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9rem}
+</style>
+</head>
+<body data-theme="dark">
+<div class="container">
+  <aside>
+    <div class="logo">Azure AI Agent Service</div>
+    <div class="subtitle">Intro rápida y comparativa</div>
+    <nav>
+      <a href="#panorama">1. Panorama Microsoft</a>
+      <a href="#comparativa">2. Tabla comparativa</a>
+      <a href="#decision">3. ¿Declarativo o personalizado?</a>
+      <a href="#que-es">4. ¿Qué es el servicio?</a>
+      <a href="#arquitectura">5. Arquitectura</a>
+      <a href="#herramientas">6. Herramientas: Conocimiento vs Acción</a>
+      <a href="#modelos">7. Modelos & costos</a>
+      <a href="#seguridad">8. Seguridad & cumplimiento</a>
+      <a href="#multiagente">9. Multiagente (SK)</a>
+      <a href="#casos">10. Casos sugeridos</a>
+    </nav>
+    <div class="hint">
+      <strong>Tip:</strong> Usa <em>Imprimir</em> para exportar a PDF y el botón 🌗 para alternar tema.
+    </div>
+    <div class="flex" style="margin-top:10px">
+      <span class="badge">Copilot Studio</span>
+      <span class="badge">Teams AI Toolkit</span>
+      <span class="badge">Semantic Kernel</span>
+      <span class="badge">RAG</span>
+    </div>
+  </aside>
+
+  <main>
+    <header>
+      <h1>Azure AI Agent Service — Resumen Interactivo</h1>
+      <p class="subtitle">De cero a claro: rutas de Microsoft para agentes, criterios de elección, arquitectura y ventajas clave.</p>
+    </header>
+
+    <section id="panorama" class="card">
+      <h2>1) Panorama Microsoft</h2>
+      <div class="grid-3">
+        <div>
+          <h3>Microsoft Copilot Studio</h3>
+          <ul>
+            <li>Plataforma <em>low/no-code</em> para <strong>agentes declarativos</strong>.</li>
+            <li>Extiende <strong>Copilot para M365</strong>.</li>
+            <li>Menor control de orquestación; rapidez de entrega.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Teams AI Toolkit</h3>
+          <ul>
+            <li>Dev profesional para agentes <strong>en Microsoft Teams</strong>.</li>
+            <li>Admite <em>custom models</em> y orquestación propia.</li>
+            <li>Enfocado al ecosistema Teams.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Azure AI Agent Service + SK</h3>
+          <ul>
+            <li>Dev profesional para <strong>agentes personalizados y multiagente</strong>.</li>
+            <li><strong>Control granular</strong> de orquestación y herramientas.</li>
+            <li>Integración nativa con Azure (AI Search, Functions, Logic Apps…).</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="comparativa" class="card">
+      <h2>2) Tabla comparativa</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Aspecto</th>
+            <th>Copilot Studio</th>
+            <th>Teams AI Toolkit</th>
+            <th>Azure AI Agent Service + SK</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Perfil</td>
+            <td>Ciudadano/negocio (low-code)</td>
+            <td>Desarrollador pro</td>
+            <td>Desarrollador pro</td>
+          </tr>
+          <tr>
+            <td>Ámbito</td>
+            <td>M365 y extensiones</td>
+            <td>Experiencia en Teams</td>
+            <td>Servicios Azure y apps personalizadas</td>
+          </tr>
+          <tr>
+            <td>Tipo de agente</td>
+            <td>Declarativo</td>
+            <td>Motor personalizado en Teams</td>
+            <td>Motor personalizado / Multiagente</td>
+          </tr>
+          <tr>
+            <td>Orquestación</td>
+            <td>Predefinida</td>
+            <td>Propia (limitado a Teams)</td>
+            <td>Totalmente propia y extensible</td>
+          </tr>
+          <tr>
+            <td>Integraciones</td>
+            <td>Copilot/M365</td>
+            <td>Teams + APIs</td>
+            <td>Azure Functions, Logic Apps, AI Search, Bing, APIs…</td>
+          </tr>
+          <tr>
+            <td>Casos típicos</td>
+            <td>Flujos simples y rápidos</td>
+            <td>Bots y apps para Teams</td>
+            <td>Flujos complejos, RAG, automatización end-to-end</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="decision" class="card">
+      <h2>3) ¿Declarativo o <em>motor personalizado</em>?</h2>
+      <p>Usa este diagrama para decidir rápidamente.</p>
+      <figure>
+        <svg viewBox="0 0 980 360" role="img" aria-label="Diagrama de decisión: declarativo vs motor personalizado">
+          <defs>
+            <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <polygon points="0 0, 6 3, 0 6" fill="currentColor"/>
+            </marker>
+          </defs>
+          <rect x="30" y="30" width="920" height="300" rx="16" ry="16" fill="rgba(17,24,39,.45)" stroke="var(--border)"/>
+          <text x="46" y="54" fill="var(--muted)" style="font-size:13px">Árbol de decisión</text>
+
+          <rect x="70" y="90" width="250" height="70" rx="12" ry="12" fill="rgba(124,58,237,.25)" stroke="var(--border)"/>
+          <text x="90" y="122" fill="currentColor" style="font-weight:700">¿Necesitas modelo u orquestador propio?</text>
+
+          <rect x="390" y="60" width="230" height="70" rx="12" ry="12" fill="rgba(34,197,94,.25)" stroke="var(--border)"/>
+          <text x="425" y="100" fill="currentColor" style="font-weight:700">Sí → Motor personalizado</text>
+
+          <rect x="390" y="150" width="230" height="70" rx="12" ry="12" fill="rgba(34,197,94,.25)" stroke="var(--border)"/>
+          <text x="420" y="190" fill="currentColor" style="font-weight:700">No → Siguiente pregunta</text>
+
+          <rect x="660" y="40" width="280" height="90" rx="12" ry="12" fill="rgba(59,130,246,.25)" stroke="var(--border)"/>
+          <text x="680" y="75" fill="currentColor" style="font-weight:700">¿Mensajes proactivos/asíncronos?</text>
+          <text x="680" y="95" fill="currentColor" style="font-size:13px">Flujos complejos, esperas, eventos, etc.</text>
+
+          <rect x="660" y="150" width="280" height="90" rx="12" ry="12" fill="rgba(59,130,246,.25)" stroke="var(--border)"/>
+          <text x="680" y="185" fill="currentColor" style="font-weight:700">¿Planificación dinámica en runtime?</text>
+          <text x="680" y="205" fill="currentColor" style="font-size:13px">Secuencias que cambian por contexto</text>
+
+          <rect x="660" y="260" width="280" height="50" rx="12" ry="12" fill="rgba(34,197,94,.25)" stroke="var(--border)"/>
+          <text x="700" y="290" fill="currentColor" style="font-weight:700">Si cualquiera es “Sí” → Motor personalizado</text>
+
+          <rect x="390" y="260" width="230" height="50" rx="12" ry="12" fill="rgba(234,179,8,.25)" stroke="var(--border)"/>
+          <text x="418" y="290" fill="currentColor" style="font-weight:700">Si ambas “No” → Declarativo</text>
+
+          <line x1="320" y1="125" x2="390" y2="95" stroke="currentColor" marker-end="url(#arrow)"/>
+          <line x1="320" y1="125" x2="390" y2="185" stroke="currentColor" marker-end="url(#arrow)"/>
+          <line x1="620" y1="95" x2="660" y2="85" stroke="currentColor" marker-end="url(#arrow)"/>
+          <line x1="620" y1="185" x2="660" y2="195" stroke="currentColor" marker-end="url(#arrow)"/>
+          <line x1="620" y1="95" x2="660" y2="285" stroke="currentColor" marker-end="url(#arrow)"/>
+          <line x1="620" y1="185" x2="660" y2="285" stroke="currentColor" marker-end="url(#arrow)"/>
+          <line x1="620" y1="225" x2="660" y2="285" stroke="currentColor" marker-end="url(#arrow)"/>
+          <line x1="620" y1="225" x2="390" y2="285" stroke="currentColor" marker-end="url(#arrow)"/>
+        </svg>
+        <figcaption class="caption">Si necesitas control fino, proactividad o planificación dinámica → motor personalizado.</figcaption>
+      </figure>
+      <details>
+        <summary>Regla práctica</summary>
+        Elige <mark>declarativo</mark> para flujos simples y rápidos (Copilot Studio). Elige <mark>motor personalizado</mark> para control, orquestación y flujos complejos (Teams AI Toolkit o Azure AI Agent Service + SK).
+      </details>
+    </section>
+
+    <section id="que-es" class="card">
+      <h2>4) ¿Qué es Azure AI Agent Service?</h2>
+      <p>Servicio <strong>totalmente gestionado</strong> dentro de <strong>Azure AI Studio Hub</strong> (Azure AI Foundry) para crear, desplegar y escalar agentes como <em>microservicios inteligentes</em> que responden, actúan y automatizan flujos.</p>
+      <ul>
+        <li>Integra herramientas de <em>conocimiento</em> y de <em>acción</em>.</li>
+        <li>SDK dedicado que simplifica la creación e integración.</li>
+        <li>Encaje natural con el ecosistema Azure.</li>
+      </ul>
+    </section>
+
+    <section id="arquitectura" class="card">
+      <h2>5) Arquitectura (visión simplificada)</h2>
+      <figure>
+        <svg viewBox="0 0 980 420" role="img" aria-label="Arquitectura de agente con Azure: Planner, LLM, Memoria, Herramientas, Integraciones">
+          <rect x="30" y="30" width="920" height="360" rx="16" ry="16" fill="rgba(17,24,39,.45)" stroke="var(--border)"/>
+          <text x="44" y="54" fill="var(--muted)" style="font-size:13px">Aplicación / Servicio de Agente</text>
+
+          <rect x="80" y="90" width="220" height="80" rx="12" ry="12" fill="rgba(124,58,237,.25)" stroke="var(--border)"/>
+          <text x="110" y="120" fill="currentColor" style="font-weight:700">Planner & Autonomía</text>
+          <text x="100" y="140" fill="currentColor" style="font-size:13px">Secuenciación dinámica</text>
+
+          <rect x="330" y="90" width="220" height="80" rx="12" ry="12" fill="rgba(34,197,94,.25)" stroke="var(--border)"/>
+          <text x="400" y="120" fill="currentColor" style="font-weight:700">LLM</text>
+          <text x="360" y="140" fill="currentColor" style="font-size:13px">Razonamiento y generación</text>
+
+          <rect x="580" y="90" width="320" height="80" rx="12" ry="12" fill="rgba(59,130,246,.25)" stroke="var(--border)"/>
+          <text x="600" y="120" fill="currentColor" style="font-weight:700">Memoria / Estado / Contexto</text>
+          <text x="600" y="140" fill="currentColor" style="font-size:13px">Historial, preferencias, almacenamiento</text>
+
+          <rect x="80" y="210" width="240" height="80" rx="12" ry="12" fill="rgba(59,130,246,.25)" stroke="var(--border)"/>
+          <text x="110" y="240" fill="currentColor" style="font-weight:700">Conocimiento (RAG)</text>
+          <text x="110" y="260" fill="currentColor" style="font-size:13px">AI Search, Fabric, SharePoint, Bing</text>
+
+          <rect x="350" y="210" width="240" height="80" rx="12" ry="12" fill="rgba(59,130,246,.25)" stroke="var(--border)"/>
+          <text x="395" y="240" fill="currentColor" style="font-weight:700">Acción</text>
+          <text x="395" y="260" fill="currentColor" style="font-size:13px">Functions, Logic Apps, OpenAPI</text>
+
+          <rect x="620" y="210" width="280" height="80" rx="12" ry="12" fill="rgba(59,130,246,.25)" stroke="var(--border)"/>
+          <text x="650" y="240" fill="currentColor" style="font-weight:700">Intérprete de Código</text>
+          <text x="650" y="260" fill="currentColor" style="font-size:13px">Cálculo/visualización con ficheros</text>
+
+          <defs>
+            <marker id="arrow2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <polygon points="0 0, 6 3, 0 6" fill="currentColor"/>
+            </marker>
+          </defs>
+          <line x1="300" y1="130" x2="330" y2="130" stroke="currentColor" marker-end="url(#arrow2)"/>
+          <line x1="550" y1="130" x2="580" y2="130" stroke="currentColor" marker-end="url(#arrow2)"/>
+          <line x1="440" y1="170" x2="200" y2="210" stroke="currentColor" marker-end="url(#arrow2)"/>
+          <line x1="440" y1="170" x2="470" y2="210" stroke="currentColor" marker-end="url(#arrow2)"/>
+          <line x1="440" y1="170" x2="760" y2="210" stroke="currentColor" marker-end="url(#arrow2)"/>
+        </svg>
+        <figcaption class="caption">El agente planifica, razona y usa herramientas de conocimiento y acción con memoria/estado.</figcaption>
+      </figure>
+    </section>
+
+    <section id="herramientas" class="card">
+      <h2>6) Herramientas: Conocimiento vs Acción</h2>
+      <div class="grid-2">
+        <div>
+          <h3>Conocimiento</h3>
+          <ul>
+            <li><strong>Azure AI Search</strong> (RAG sobre datos privados).</li>
+            <li>Microsoft Fabric / <strong>SharePoint</strong>.</li>
+            <li><strong>Bing</strong> para grounding en la web.</li>
+            <li>Búsqueda en archivos (Blob/Files).</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Acción</h3>
+          <ul>
+            <li><strong>Azure Functions</strong>.</li>
+            <li><strong>Azure Logic Apps</strong>.</li>
+            <li><strong>OpenAPI</strong> (llamadas a APIs externas).</li>
+            <li><strong>Intérprete de código</strong> (cálculo/visualización).</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="modelos" class="card">
+      <h2>7) Modelos y costos</h2>
+      <ul>
+        <li>Azure OpenAI (GPT-4/Turbo) y terceros: <strong>Llama</strong>, <strong>Mistral</strong>, <strong>Hugging Face</strong>, etc.</li>
+        <li>Ejecución <strong>serverless</strong>: pagas por uso de inferencia, no por la infraestructura entera.</li>
+        <li>Optimiza coste/latencia midiendo <em>costo por tarea completada</em>.</li>
+      </ul>
+    </section>
+
+    <section id="seguridad" class="card">
+      <h2>8) Seguridad y cumplimiento</h2>
+      <ul>
+        <li>Autenticación <strong>OBO</strong> (on-behalf-of).</li>
+        <li>Red privada <strong>VNet</strong> y controles de aislamiento.</li>
+        <li><strong>Privacidad de datos</strong> y cumplimiento.</li>
+        <li>Filtros de seguridad de contenido.</li>
+      </ul>
+    </section>
+
+    <section id="multiagente" class="card">
+      <h2>9) Multiagente con Semantic Kernel</h2>
+      <p>Azure AI Agent Service crea <em>agentes individuales</em>. Para que múltiples agentes colaboren, coordínalos con <strong>Semantic Kernel (SK)</strong> (o frameworks como Autogen para I+D).</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Opción</th><th>Madurez</th><th>Enfoque</th><th>Cuándo usar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Semantic Kernel (SK)</td>
+            <td>Producción</td>
+            <td>Orquestación/memoria/planificación</td>
+            <td>Sistemas multiagente estables</td>
+          </tr>
+          <tr>
+            <td>Autogen</td>
+            <td>I+D</td>
+            <td>Prototipado/experimentos</td>
+            <td>Exploración rápida</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="casos" class="card">
+      <h2>10) Casos sugeridos</h2>
+      <div class="grid-2">
+        <div>
+          <h3>Declarativo (Copilot Studio)</h3>
+          <ul>
+            <li>FAQ internas, formularios, flujos guiados sencillos.</li>
+            <li>Extensiones puntuales de Copilot M365.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Motor personalizado (Azure Agent + SK)</h3>
+          <ul>
+            <li>RAG + acciones transaccionales (Functions/Logic Apps).</li>
+            <li>Procesos con eventos, colas y pasos asíncronos.</li>
+            <li>Integraciones profundas con servicios Azure.</li>
+          </ul>
+        </div>
+      </div>
+      <details style="margin-top:10px">
+        <summary>Nota de práctica</summary>
+        Para Teams-centrado con experiencia nativa, usa <mark>Teams AI Toolkit</mark>. Para apps más allá de Teams o control total, usa <mark>Azure AI Agent Service + SK</mark>.
+      </details>
+    </section>
+
+    <section class="card">
+      <h2>Bonus: patrón de inicio (alto nivel)</h2>
+      <pre class="code"># Pseudocódigo conceptual (no ejecutable)
+# 1) Definir herramientas (AI Search, Functions, OpenAPI...)
+# 2) Crear agente en Azure AI Agent Service (modelo + capacidades)
+# 3) Conectar memoria/estado
+# 4) Orquestar con Semantic Kernel (multiagente si aplica)
+# 5) Exponer como API/microservicio y monitorear costo/latencia</pre>
+    </section>
+
+    <div class="footer">
+      Hecho para estudio personal. Personalízalo para tus cursos o documentación.
+    </div>
+  </main>
+</div>
+
+<div class="btns">
+  <button class="btn" onclick="document.body.dataset.theme = (document.body.dataset.theme === 'light' ? 'dark' : 'light')">🌗 Modo</button>
+  <button class="btn" onclick="window.print()">🖨️ Imprimir</button>
+  <button class="btn" onclick="window.scrollTo({top:0, behavior:'smooth'})">⬆️ Arriba</button>
+</div>
+</body>
+</html>
