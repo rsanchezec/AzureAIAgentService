@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Suite de Estudio – MCP + Multiagentes + Plugins (Azure AI & Semantic Kernel)</title>
+  <style>
+    :root{
+      --bg:#0b1220; --panel:#0f172a; --accent:#38bdf8; --muted:#94a3b8; --text:#e5e7eb; --ok:#34d399; --warn:#fbbf24; --danger:#f87171;
+    }
+    *{box-sizing:border-box}
+    body{margin:0; font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto; background:var(--bg); color:var(--text)}
+    header{padding:24px; border-bottom:1px solid #1f2937; background:linear-gradient(180deg,#0f172a,#0b1220)}
+    h1{margin:0; font-size:22px; color:#e2e8f0}
+    .subtitle{color:#9ca3af; margin-top:6px; font-size:13px}
+    .container{max-width:1200px; margin:0 auto; padding:18px}
+    .tabs{display:flex; gap:10px; flex-wrap:wrap; margin:16px 0 10px}
+    .tab{padding:10px 14px; border:1px solid #1f2937; border-bottom:none; border-radius:12px 12px 0 0; background:#0f172a; color:#cbd5e1; cursor:pointer; font-size:14px}
+    .tab.active{background:#0b1930; color:#fff; border-color:#274060}
+    .panel{display:none; background:#0b1930; border:1px solid #274060; border-radius:0 12px 12px 12px; padding:18px}
+    .panel.active{display:block}
+    h2{margin:14px 0 8px; font-size:20px}
+    h3{margin:10px 0 6px; font-size:16px; color:#dbeafe}
+    p{color:#d1d5db; line-height:1.65}
+    ul{margin:8px 0 8px 18px}
+    .card{background:linear-gradient(180deg,#0f172a,#0b1220); border:1px solid #1f2937; border-radius:14px; padding:16px; margin:12px 0}
+    .grid{display:grid; grid-template-columns:repeat(12,1fr); gap:16px}
+    .col-4{grid-column:span 4} .col-6{grid-column:span 6} .col-8{grid-column:span 8} .col-12{grid-column:span 12}
+    .diagram{white-space:pre; background:#0b1222; border:1px dashed #274060; padding:12px; border-radius:10px; overflow:auto}
+    code, pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:13px}
+    pre{background:#0b1222; border:1px solid #1f2937; padding:14px; border-radius:12px; overflow:auto; position:relative}
+    .copy{position:absolute; right:12px; top:8px; font-size:12px; padding:4px 8px; border:1px solid #1f2937; border-radius:8px; background:#0e1a2e; color:#a5b4fc; cursor:pointer}
+    .pill{display:inline-block; padding:3px 8px; border:1px solid #1f2937; border-radius:999px; margin:2px; color:#9ca3af}
+    .hint{background:#0b1930; border:1px dashed #274060; color:#c7d2fe; padding:12px; border-radius:10px}
+    footer{padding:18px; color:#9ca3af; font-size:12px; text-align:center}
+    a.btn{display:inline-block; margin:8px 6px 0 0; padding:8px 12px; border:1px solid #1f2937; border-radius:10px; text-decoration:none; color:#cbd5e1; background:#0f172a}
+    a.btn:hover{background:#111827; color:#fff}
+    @media (max-width:900px){ .grid{grid-template-columns:repeat(6,1fr)} .col-8{grid-column:span 6} .col-6{grid-column:span 6} .col-4{grid-column:span 6} }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>Suite de Estudio – MCP + Multiagentes + Plugins</h1>
+      <div class="subtitle">Azure AI Agent Service • Semantic Kernel SDK • Orquestación multiagente</div>
+      <div style="margin-top:10px">
+        <a class="btn" href="#dl" onclick="document.getElementById('dl').scrollIntoView({behavior:'smooth'});return false;">↓ Guías rápidas</a>
+        <a class="btn" href="https://learn.microsoft.com/semantic-kernel/" target="_blank" rel="noopener">Docs Semantic Kernel</a>
+        <a class="btn" href="https://learn.microsoft.com/azure/ai-studio/" target="_blank" rel="noopener">Docs Azure AI Studio</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="tabs">
+      <div class="tab active" data-target="mcp">MCP + Azure AI</div>
+      <div class="tab" data-target="multi">Multiagentes (Azure AI + SK)</div>
+      <div class="tab" data-target="plugins">Plugins en Semantic Kernel</div>
+    </div>
+
+    <!-- Panel 1: MCP + Azure AI -->
+    <div id="mcp" class="panel active">
+      <h2>Protocolo Model Context (MCP) + Azure AI</h2>
+      <p>El <strong>Model Context Protocol</strong> define una arquitectura <em>cliente-servidor</em> para que un LLM, desde un cliente (VS Code, Cloud Desktop), se conecte de forma modular a múltiples <strong>servidores MCP</strong> (APIs/servicios locales o remotos).</p>
+      <div class="grid">
+        <div class="card col-6">
+          <h3>Conceptos</h3>
+          <ul>
+            <li><strong>Cliente MCP</strong>: IDEs / escritorios (VS Code, Cloud Desktop).</li>
+            <li><strong>Servidor MCP</strong>: encapsula una fuente (local/API) y expone capacidades.</li>
+            <li><strong>Ventajas</strong>: modularidad, extensibilidad, menor acoplamiento.</li>
+          </ul>
+          <div class="hint">Analogía: un <strong>hub USB‑C</strong> que conecta varios servidores MCP a un único LLM.</div>
+        </div>
+        <div class="card col-6">
+          <h3>MCP con toque Azure</h3>
+          <ul>
+            <li>Construye <strong>Agentes de Azure AI</strong> sobre Azure AI Search / Cosmos DB / APIs.</li>
+            <li>Encapsúlalos detrás de un <strong>servidor MCP</strong> para plug‑and‑play desde tu LLM.</li>
+            <li>Opcional: servidor único que expone varios agentes (Search/Writer/Web).</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Diagrama</h3>
+        <div class="diagram">Cliente MCP (VS Code / Cloud Desktop)
+  ├─ Servidor MCP A (Explorador de archivos local)
+  ├─ Servidor MCP B (GitHub / Gmail APIs)
+  └─ Servidor MCP C (Agente Azure AI → Azure Search / Cosmos / Web)</div>
+      </div>
+    </div>
+
+    <!-- Panel 2: Multiagentes (Azure + SK) -->
+    <div id="multi" class="panel">
+      <h2>Sistemas multiagente con Azure AI + Semantic Kernel</h2>
+      <p><strong>Azure AI Agent Service</strong> crea agentes de dominio. <strong>Semantic Kernel</strong> actúa como orquestador para que colaboren mediante planes dinámicos.</p>
+      <div class="grid">
+        <div class="card col-6">
+          <h3>Rol del orquestador</h3>
+          <ul>
+            <li>Decide <em>qué</em> agente llamar y <em>cuándo</em>.</li>
+            <li>Secuencia dinámica (A → B → C), condiciones y reintentos.</li>
+            <li>Planificador = “córtex prefrontal”.</li>
+          </ul>
+        </div>
+        <div class="card col-6">
+          <h3>Flujo ejemplo</h3>
+          <div class="diagram">Usuario → Planificador (intención)
+  ├─ Agente Búsqueda (RAG)
+  ├─ Agente Redacción (formatea)
+  └─ Agente Guardado (persiste)</div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Snippet (Python, esqueleto)</h3>
+        <pre><button class="copy" data-target="py_multi">Copiar</button><code id="py_multi">from semantic_kernel import Kernel
+from semantic_kernel.planning import Planner
+
+kernel = Kernel()
+# registrar wrappers a tus agentes de Azure como skills
+# kernel.import_skill(...)
+
+planner = Planner(kernel)
+goal = "Busca X, redacta 150 palabras y guarda en /reports/x.md"
+plan = planner.create_plan(goal=goal)
+out = kernel.run(plan)
+print(out)</code></pre>
+      </div>
+    </div>
+
+    <!-- Panel 3: Plugins SK -->
+    <div id="plugins" class="panel">
+      <h2>Plugins en Semantic Kernel: Prompt • Integrados • Nativos</h2>
+      <p>Los <strong>plugins</strong> son capacidades que el Kernel invoca. Tipos:</p>
+      <div class="grid">
+        <div class="card col-4">
+          <h3>Prompt Templates</h3>
+          <ul>
+            <li>Definen estilo/comportamiento del LLM.</li>
+            <li>Útiles en agentes individuales.</li>
+            <li>No llaman APIs por sí solos.</li>
+          </ul>
+        </div>
+        <div class="card col-4">
+          <h3>Integrados (built‑in)</h3>
+          <ul>
+            <li>Preconstruidos para tareas comunes.</li>
+            <li>Sirven como “starter kit”.</li>
+            <li>Se extienden/ajustan según necesidad.</li>
+          </ul>
+        </div>
+        <div class="card col-4">
+          <h3>Nativos</h3>
+          <ul>
+            <li>En código (Python/C#): llaman APIs y ejecutan lógica.</li>
+            <li>Clave en <strong>multiagente</strong> con Azure Agents.</li>
+            <li>Permiten políticas de seguridad/observabilidad.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Patrón con Agentes de Azure</h3>
+        <pre><button class="copy" data-target="py_plugin">Copiar</button><code id="py_plugin">from semantic_kernel import Kernel
+from semantic_kernel.functions import kernel_function
+
+class AgentSearch:
+    def __init__(self, client): self.client = client
+
+    @kernel_function(name="search")
+    async def search(self, query: str, top: int = 5) -> str:
+        # Invoca agente "search" de Azure (pseudo)
+        res = await self.client.agents["search"].run({"query": query, "top": top})
+        return res["summary"]
+
+kernel = Kernel()
+kernel.import_plugin(AgentSearch(client), "agent_search")</code></pre>
+      </div>
+
+      <div class="card">
+        <h3>Comparativa rápida</h3>
+        <div class="grid">
+          <div class="col-12">
+            <ul>
+              <li><span class="pill">Prompt</span>: estilo/consistencia de salida.</li>
+              <li><span class="pill">Integrados</span>: productividad inmediata.</li>
+              <li><span class="pill">Nativos</span>: integración con APIs/agentes y lógica de negocio.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="dl" class="card">
+      <h3>Guías rápidas / Descargas</h3>
+      <p>Este archivo contiene las tres guías en pestañas. Puedes guardarlo como HTML para compartirlo offline.</p>
+      <ul>
+        <li>Ctrl/Cmd + S para guardar desde el navegador.</li>
+        <li>O descarga directamente desde este enlace:</li>
+      </ul>
+      <p><a id="selflink" class="btn" download="suite_mcp_multiagentes_plugins.html">Descargar este HTML</a></p>
+    </div>
+  </div>
+
+  <footer>© Suite de estudio – MCP + Multiagentes + Plugins • Azure AI & Semantic Kernel</footer>
+
+  <script>
+    // Tabs
+    const tabs = document.querySelectorAll('.tab');
+    const panels = document.querySelectorAll('.panel');
+    tabs.forEach(t=>t.addEventListener('click', ()=>{
+      tabs.forEach(x=>x.classList.remove('active'));
+      panels.forEach(p=>p.classList.remove('active'));
+      t.classList.add('active');
+      document.getElementById(t.dataset.target).classList.add('active');
+      history.replaceState(null, '', '#' + t.dataset.target);
+    }));
+    // Deep-link
+    const hash = location.hash.replace('#','');
+    if(hash){
+      const t = document.querySelector('.tab[data-target="'+hash+'"]');
+      if(t){ t.click(); }
+    }
+    // Copy buttons
+    document.querySelectorAll('.copy').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const id = btn.getAttribute('data-target');
+        const code = document.getElementById(id).innerText;
+        navigator.clipboard.writeText(code).then(()=>{
+          btn.textContent = 'Copiado ✓';
+          setTimeout(()=>btn.textContent='Copiar', 1200);
+        });
+      });
+    });
+    // Build a self-download link (blob)
+    fetch(window.location.href).catch(()=>{}); // no-op
+    // Create a blob from current HTML to allow direct download
+    const serializer = new XMLSerializer();
+    const html = serializer.serializeToString(document.documentElement);
+    const blob = new Blob([html], {type: 'text/html'});
+    const url = URL.createObjectURL(blob);
+    document.getElementById('selflink').href = url;
+  </script>
+</body>
+</html>

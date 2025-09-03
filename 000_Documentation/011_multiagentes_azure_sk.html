@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Multiagentes: Azure AI Agent Service + Semantic Kernel</title>
+  <style>
+    :root{
+      --bg:#0b1220; --panel:#0f172a; --accent:#38bdf8; --muted:#94a3b8; --text:#e5e7eb; --ok:#34d399; --warn:#fbbf24;
+    }
+    *{box-sizing:border-box}
+    body{margin:0; font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto; background:var(--bg); color:var(--text); display:flex; min-height:100vh}
+    nav{position:fixed; left:0; top:0; bottom:0; width:280px; background:linear-gradient(180deg,var(--panel),#0b1325); border-right:1px solid #1f2937; padding:22px 18px; overflow-y:auto}
+    nav h1{font-size:16px; letter-spacing:.3px; color:var(--accent); margin:0 0 10px 0}
+    nav .subtitle{font-size:12px; color:var(--muted); margin-bottom:16px}
+    nav a{display:block; padding:10px 12px; margin:6px 0; color:#cbd5e1; text-decoration:none; border-radius:10px; transition:.2s}
+    nav a:hover{background:#111827; color:#fff; transform:translateX(2px)}
+    nav .small{font-size:12px; color:var(--muted); margin-top:18px}
+    main{margin-left:280px; width:100%; padding:28px 28px 80px}
+    .hero{background:radial-gradient(1200px 400px at 10% -10%, rgba(56,189,248,.15), transparent), radial-gradient(800px 300px at 90% -10%, rgba(52,211,153,.12), transparent); border:1px solid #1f2937; padding:26px; border-radius:16px; display:flex; align-items:center; gap:18px}
+    .badge{font-size:12px; padding:4px 9px; border:1px solid #1f2937; border-radius:999px; color:var(--muted);}
+    h2{margin:26px 0 10px; font-size:22px}
+    p{color:#d1d5db; line-height:1.65}
+    .card{background:linear-gradient(180deg,#0f172a,#0b1220); border:1px solid #1f2937; border-radius:14px; padding:18px; margin:16px 0}
+    .grid{display:grid; grid-template-columns:repeat(12,1fr); gap:16px}
+    .col-4{grid-column:span 4} .col-6{grid-column:span 6} .col-8{grid-column:span 8} .col-12{grid-column:span 12}
+    .hint{background:#0b1930; border:1px dashed #274060; color:#c7d2fe; padding:12px; border-radius:10px}
+    .ok{color:var(--ok)} .warn{color:var(--warn)}
+    code, pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:13px}
+    pre{background:#0b1930; border:1px solid #1f2937; padding:14px; border-radius:12px; overflow:auto; position:relative}
+    .copy{position:absolute; right:12px; top:8px; font-size:12px; padding:4px 8px; border:1px solid #1f2937; border-radius:8px; background:#0e1a2e; color:#a5b4fc; cursor:pointer}
+    .kbd{border:1px solid #374151; border-bottom-width:3px; padding:2px 6px; border-radius:6px; font-size:12px; color:#cbd5e1}
+    ul{margin:8px 0 8px 18px}
+    .pill{display:inline-block; padding:3px 8px; border:1px solid #1f2937; border-radius:999px; margin:2px; color:#9ca3af}
+    .diagram{white-space:pre; background:#0b1930; border:1px solid #1f2937; padding:14px; border-radius:12px; overflow:auto}
+    footer{margin-top:28px; color:#9ca3af; font-size:12px}
+    @media (max-width:960px){ nav{position:static; width:auto; height:auto} main{margin:0} }
+  </style>
+</head>
+<body>
+  <nav>
+    <h1>Multiagentes SK + Azure</h1>
+    <div class="subtitle">Resumen interactivo</div>
+    <a href="#intro">1. Contexto y objetivo</a>
+    <a href="#orquestador">2. Rol del orquestador</a>
+    <a href="#flujo">3. Ejemplo de flujo</a>
+    <a href="#sk">4. Semantic Kernel (SK)</a>
+    <a href="#analogias">5. Analogías útiles</a>
+    <a href="#arquitectura">6. Arquitectura visual</a>
+    <a href="#lab">7. Guía rápida de laboratorio</a>
+    <a href="#tips">8. Buenas prácticas</a>
+    <div class="small">Hecho para: estudio y demo rápida</div>
+  </nav>
+
+  <main>
+    <section class="hero" id="intro">
+      <div class="badge">Azure AI Agent Service + Semantic Kernel</div>
+      <div>
+        <h2>1) Contexto y objetivo</h2>
+        <p>
+          Azure AI Agent Service permite crear <strong>agentes específicos de dominio</strong> (microservicios gestionados), pero sólo como <em>agentes individuales</em> con herramientas.
+          Para construir <strong>sistemas multiagente</strong> donde los agentes colaboren y se encadenen, usamos <strong>Semantic Kernel (SK)</strong> como <em>orquestador listo para producción</em>.
+        </p>
+        <div class="hint">Idea clave: <strong>Azure AI construye agentes</strong>; <strong>Semantic Kernel los hace trabajar juntos</strong> con planes dinámicos.</div>
+      </div>
+    </section>
+
+    <section id="orquestador">
+      <h2>2) Rol del orquestador (SK)</h2>
+      <div class="card">
+        <ul>
+          <li>Decide en tiempo de ejecución <strong>qué agente</strong> invocar y <strong>en qué orden</strong>.</li>
+          <li>Soporta <strong>flujos secuenciales y condicionales</strong> (p.ej., AgenteA ➜ AgenteB ➜ AgenteC).</li>
+          <li>Usa el <span class="kbd">Planificador</span> de SK para generar el <strong>plan dinámico</strong> según la intención del usuario.</li>
+          <li>Permite inyectar <strong>memoria, conectores y plugins</strong> cuando sea necesario.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="flujo">
+      <h2>3) Ejemplo de flujo multiagente</h2>
+      <div class="grid">
+        <div class="card col-6">
+          <p><strong>Agente de búsqueda</strong> ➜ recupera información relevante (RAG).</p>
+          <p><strong>Agente de redacción</strong> ➜ transforma lo recuperado en un texto claro/estructurado.</p>
+          <p><strong>Agente de guardado</strong> ➜ persiste el resultado (DB/Blob/SharePoint).</p>
+          <p>El <em>plan</em> (A ➜ B ➜ C) lo genera el Planificador del SK en tiempo de ejecución.</p>
+        </div>
+        <div class="card col-6">
+          <div class="diagram">
+Usuario
+  │ consulta
+  ▼
+Planificador (SK)
+  ├─ invoca Agente Búsqueda
+  │     └─ resultados
+  ├─ invoca Agente Redacción (usa resultados)
+  │     └─ borrador final
+  └─ invoca Agente Guardado (persiste documento)
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sk">
+      <h2>4) Semantic Kernel (componentes)</h2>
+      <div class="grid">
+        <div class="card col-4">
+          <h3>Kernel (núcleo)</h3>
+          <p>Capa de orquestación: coordina modelos, agentes, memoria y acciones. <span class="ok">Piensa “cerebro”.</span></p>
+        </div>
+        <div class="card col-4">
+          <h3>Plugins</h3>
+          <p>Habilidades/acciones especializadas. En este curso, los <strong>agentes de Azure AI</strong> se usan como “plugins”.</p>
+        </div>
+        <div class="card col-4">
+          <h3>Conectores</h3>
+          <p>Integran datos/servicios externos (RAG, bases, APIs). <span class="warn">Úsalos con políticas de seguridad/PII.</span></p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Planificador</h3>
+        <p>Genera y ejecuta <strong>planes</strong>: secuencia de pasos (agentes/funciones) para cumplir la intención. Admite bifurcaciones, reintentos y control de errores.</p>
+        <pre><button class="copy" data-target="skcode">Copiar</button><code id="skcode"># Pseudocódigo (Python) con SK como orquestador
+from semantic_kernel import Kernel
+from semantic_kernel.planning import Planner
+
+kernel = Kernel()
+
+# Enlazamos "agentes" de Azure AI como funciones/skills
+search_agent = kernel.import_skill("agent_search")    # wrapper que llama al agente en Azure
+write_agent  = kernel.import_skill("agent_writer")
+save_agent   = kernel.import_skill("agent_saver")
+
+planner = Planner(kernel)
+
+user_goal = "Busca info de X, redacta un resumen de 150 palabras y guárdalo en mi blob."
+plan = planner.create_plan(goal=user_goal, available_skills=[search_agent, write_agent, save_agent])
+
+result = kernel.run(plan)  # Ejecuta: search -> write -> save (dinámico)
+print(result)</code></pre>
+      </div>
+    </section>
+
+    <section id="analogias">
+      <h2>5) Analogías útiles</h2>
+      <div class="grid">
+        <div class="card col-6">
+          <h3>Biológica</h3>
+          <ul>
+            <li><strong>Kernel</strong> = cerebro.</li>
+            <li><strong>Plugins/Agentes</strong> = órganos especializados.</li>
+            <li><strong>Planificador</strong> = córtex prefrontal (planificación/ejecución).</li>
+          </ul>
+        </div>
+        <div class="card col-6">
+          <h3>Arquitectura de software</h3>
+          <ul>
+            <li><strong>Azure AI Agents</strong> = microservicios de dominio.</li>
+            <li><strong>Semantic Kernel</strong> = service mesh/orquestador.</li>
+            <li><strong>Plan</strong> = pipeline dinámico de tareas.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="arquitectura">
+      <h2>6) Arquitectura visual (alto nivel)</h2>
+      <div class="diagram">
+VS Code / Portal ✔
+  └─ Orquestador (Semantic Kernel)
+        ├─ Planificador (intención ➜ plan dinámico)
+        ├─ Memoria / Conectores / Seguridad
+        └─ "Plugins" = Agentes Azure AI
+              ├─ Agent-Search  → (RAG: Azure AI Search / Cosmos DB)
+              ├─ Agent-Writer  → (redacción/formatos)
+              └─ Agent-Saver   → (persistencia: Blob/DB/SharePoint)
+      </div>
+      <div class="hint">Sustituye o añade agentes según el dominio (facturación, soporte, analytics, etc.).</div>
+    </section>
+
+    <section id="lab">
+      <h2>7) Guía rápida de laboratorio</h2>
+      <div class="card">
+        <ol>
+          <li><strong>Crear agentes en Azure AI Agent Service</strong>: Search, Writer, Saver. Configura acceso (RBAC), secretos y herramientas.</li>
+          <li><strong>Publicar wrappers</strong> (SDK/REST) para cada agente que invocarás desde SK.</li>
+          <li><strong>Configurar Semantic Kernel</strong> en tu proyecto (Python/C#). Registra los wrappers como skills/plugins.</li>
+          <li><strong>Escribir prompt de meta-intención</strong> (qué objetivo debe cumplir el planificador; p.ej., “buscar→redactar→guardar”).</li>
+          <li><strong>Ejecutar un caso</strong> de extremo a extremo y validar logs/telemetría.</li>
+        </ol>
+      </div>
+
+      <div class="grid">
+        <div class="card col-6">
+          <h3>Python (esqueleto)</h3>
+          <pre><button class="copy" data-target="py">Copiar</button><code id="py"># pip install semantic-kernel
+from semantic_kernel import Kernel
+from my_wrappers import AgentSearch, AgentWriter, AgentSaver  # tus wrappers a Azure Agents
+
+kernel = Kernel()
+kernel.import_skill(AgentSearch(kernel),  "agent_search")
+kernel.import_skill(AgentWriter(kernel),  "agent_writer")
+kernel.import_skill(AgentSaver(kernel),   "agent_saver")
+
+goal = "Encuentra tendencias de ventas Q3, resume en 10 bullets y guarda como /reports/q3.md"
+plan = kernel.plan(goal)
+out = kernel.run(plan)
+print(out)</code></pre>
+        </div>
+        <div class="card col-6">
+          <h3>C# (esqueleto)</h3>
+          <pre><button class="copy" data-target="cs">Copiar</button><code id="cs">// dotnet add package Microsoft.SemanticKernel
+using Microsoft.SemanticKernel;
+
+var builder = Kernel.CreateBuilder();
+var kernel = builder.Build();
+
+kernel.ImportPluginFromObject(new AgentSearch(), "agent_search");
+kernel.ImportPluginFromObject(new AgentWriter(), "agent_writer");
+kernel.ImportPluginFromObject(new AgentSaver(),  "agent_saver");
+
+var goal = "Analiza FAQs, redacta respuesta corta y persiste en SharePoint";
+var plan = await kernel.CreatePlanAsync(goal);
+var result = await kernel.RunAsync(plan);
+Console.WriteLine(result);</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section id="tips">
+      <h2>8) Buenas prácticas</h2>
+      <div class="grid">
+        <div class="card col-12">
+          <ul>
+            <li><span class="pill">Principio de mínimo privilegio</span><span class="pill">Observabilidad</span><span class="pill">Idempotencia</span><span class="pill">Reintentos con backoff</span><span class="pill">Validación de esquema</span></li>
+            <li>Define <strong>contratos claros</strong> entre orquestador y agentes (I/O). Usa JSON schemas.</li>
+            <li>Centraliza <strong>configuración secreta</strong> (Key Vault) y usa MSI donde sea posible.</li>
+            <li>Prueba <strong>planes alternativos</strong> para entradas ambiguas. Añade guardrails (contenido/PII).</li>
+            <li>Incluye <strong>corte de circuito</strong> para agentes inestables y <strong>timeouts</strong> razonables.</li>
+          </ul>
+        </div>
+      </div>
+      <footer>© Guía de estudio – Multiagentes con Azure AI + SK</footer>
+    </section>
+  </main>
+
+  <script>
+    // Smooth scroll y botón copiar
+    document.querySelectorAll('nav a').forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        document.querySelector(a.getAttribute('href')).scrollIntoView({behavior:'smooth', block:'start'});
+      });
+    });
+    document.querySelectorAll('.copy').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const id = btn.getAttribute('data-target');
+        const code = document.getElementById(id).innerText;
+        navigator.clipboard.writeText(code).then(()=>{
+          btn.textContent = 'Copiado ✓';
+          setTimeout(()=>btn.textContent='Copiar', 1200);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

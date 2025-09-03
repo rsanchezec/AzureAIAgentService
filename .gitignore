@@ -8,12 +8,20 @@
 # Python
 __pycache__/
 *.py[cod]
+*.pyo
+*.pyd
 .Python
 venv/
 .venv/
 ENV/
+env/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.pytest_cache/
 
-# Python packaging - AGREGA ESTAS LÍNEAS
+# Python packaging
 *.egg-info/
 *.egg
 dist/
@@ -24,7 +32,32 @@ Azure_AI_Agent_Service.egg-info/
 # IDE
 .vscode/
 .idea/
+*.swp
+*.swo
+*~
 
 # OS
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Azure specific
+.azure/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# Temporary files
+*.tmp
+*.temp

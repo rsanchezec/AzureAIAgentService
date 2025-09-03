@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Protocolo Model Context (MCP) + Azure AI</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+    }
+    nav {
+      width: 260px;
+      background: #1e293b;
+      color: #fff;
+      height: 100vh;
+      padding: 20px;
+      position: fixed;
+      overflow-y: auto;
+    }
+    nav h2 {
+      font-size: 18px;
+      margin-bottom: 15px;
+      color: #38bdf8;
+    }
+    nav ul {
+      list-style: none;
+      padding: 0;
+    }
+    nav ul li {
+      margin: 12px 0;
+    }
+    nav ul li a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 14px;
+      transition: 0.3s;
+    }
+    nav ul li a:hover {
+      color: #38bdf8;
+      margin-left: 5px;
+    }
+    main {
+      margin-left: 280px;
+      padding: 30px;
+      flex: 1;
+    }
+    section {
+      margin-bottom: 50px;
+    }
+    section h1 {
+      color: #0f172a;
+      border-bottom: 2px solid #38bdf8;
+      padding-bottom: 8px;
+    }
+    section p {
+      line-height: 1.6;
+      color: #334155;
+    }
+    .highlight {
+      background: #e0f2fe;
+      padding: 6px;
+      border-radius: 6px;
+    }
+    .box {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      padding: 12px;
+      border-radius: 8px;
+      margin: 15px 0;
+    }
+    .diagram {
+      background: #f1f5f9;
+      border: 1px dashed #94a3b8;
+      padding: 15px;
+      margin-top: 15px;
+      font-family: monospace;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <h2>MCP + Azure AI</h2>
+    <ul>
+      <li><a href="#intro">1. Concepto General</a></li>
+      <li><a href="#arquitectura">2. Arquitectura</a></li>
+      <li><a href="#beneficios">3. Beneficios</a></li>
+      <li><a href="#retos">4. Retos</a></li>
+      <li><a href="#azure">5. MCP + Azure AI</a></li>
+      <li><a href="#conclusion">6. Conclusión</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <section id="intro">
+      <h1>1. Concepto General</h1>
+      <p>
+        El <strong>Model Context Protocol (MCP)</strong> define una arquitectura <span class="highlight">cliente-servidor</span> 
+        donde un <strong>cliente MCP</strong> (ej. VS Code, Cloud Desktop) se conecta a uno o varios 
+        <strong>servidores MCP</strong> (ej. APIs como GitHub, Gmail, Slack o fuentes locales).
+      </p>
+      <div class="box">El protocolo estandariza la comunicación entre LLMs y múltiples fuentes de datos.</div>
+    </section>
+
+    <section id="arquitectura">
+      <h1>2. Arquitectura</h1>
+      <p><strong>Cliente MCP</strong> = IDEs (VS Code) o escritorios en la nube (Cloud Desktop).</p>
+      <p><strong>Servidor MCP</strong> = conecta con fuentes de datos locales o servicios remotos (APIs).</p>
+      <div class="diagram">
+Cliente MCP (VS Code / Cloud Desktop)
+        │
+        ├── Servidor MCP A (Explorador de archivos local)
+        ├── Servidor MCP B (API GitHub / Gmail)
+        └── Servidor MCP C (Servicios en la nube)
+      </div>
+      <p><em>Analogía</em>: MCP funciona como un <strong>hub USB-C</strong> que conecta múltiples servidores.</p>
+    </section>
+
+    <section id="beneficios">
+      <h1>3. Beneficios</h1>
+      <ul>
+        <li>🔌 <strong>Modularidad</strong>: agregar o quitar servidores fácilmente.</li>
+        <li>📈 <strong>Extensibilidad</strong>: integración de nuevas APIs sin modificar el cliente.</li>
+        <li>⚡ <strong>Menor mantenimiento</strong>: los SDK encapsulan la complejidad del protocolo.</li>
+      </ul>
+    </section>
+
+    <section id="retos">
+      <h1>4. Retos</h1>
+      <div class="box">
+        ✅ Para usuarios: plug & play, fácil de usar.  
+        ⚠️ Para desarrolladores: más difícil, deben mantener APIs y exponerlas como servidores MCP.
+      </div>
+    </section>
+
+    <section id="azure">
+      <h1>5. MCP + Azure AI</h1>
+      <p>
+        MCP se potencia con <strong>Azure AI Agents</strong> para acceder a datos sin necesidad de exponer APIs manualmente.
+      </p>
+      <ul>
+        <li>Agente 1 → conectado a <strong>Azure AI Search</strong> (bases de datos, blobs).</li>
+        <li>Agente 2 → usa <strong>esquema OpenAPI</strong> para acceder a una API web.</li>
+        <li>Agente 3 → <strong>grounding web</strong> para resultados en tiempo real.</li>
+      </ul>
+      <p>
+        Estos agentes se encapsulan en un <strong>servidor MCP</strong>, y luego el LLM (Copilot o Claude) interactúa con ellos.
+      </p>
+    </section>
+
+    <section id="conclusion">
+      <h1>6. Conclusión</h1>
+      <p>
+        MCP es el <span class="highlight">conector universal modular</span> que permite a los LLMs comunicarse con múltiples fuentes.
+      </p>
+      <p>
+        En el mundo <strong>Azure AI</strong>, en lugar de construir APIs, puedes crear <strong>agentes</strong> que hablan con Azure Search, Cosmos DB u otros servicios.
+      </p>
+    </section>
+  </main>
+</body>
+</html>

@@ -11,6 +11,9 @@ Documentación HTML del curso con resúmenes de:
 - Function Calling y OpenAPI
 - RAG (Retrieval-Augmented Generation)
 - Embeddings y Azure AI Search
+- MCP (Model Context Protocol)
+- Multiagentes con Azure Semantic Kernel
+- Suite MCP con multiagentes y plugins
 
 ### 001_ChatCompletionsAPI
 Introducción básica a la API de Chat Completions de Azure OpenAI.
@@ -62,6 +65,16 @@ Implementación de agentes con capacidades de interpretación de código.
   - Análisis de datos con Python usando Code Interpreter
   - Generación de gráficos y visualizaciones
   - Procesamiento de archivos CSV adjuntos
+
+### 010_MultipleTools_in_Single_Agent
+Demostración de cómo combinar múltiples herramientas en un solo agente.
+- **Archivos**: `agent.py`, `functions.py`
+- **Funcionalidad**:
+  - Combinación de function calling personalizado con búsqueda web de Bing
+  - Uso de ToolSet para agrupar múltiples capacidades
+  - Ejecución secuencial de herramientas en una sola consulta
+  - Ejemplo práctico: buscar información de usuario y realizar búsqueda web relacionada
+  - Demostración de orquestación automática entre herramientas
 
 ## 🛠️ Tecnologías Utilizadas
 
@@ -130,9 +143,10 @@ python agent.py  # o program.py según el módulo
 4. **005_Function_Calling** - Funciones personalizadas
 5. **006_OpenAPI_Functions** - Integración con APIs
 6. **004_Bing_Grounding** - Búsqueda web
-7. **009_Code_Interpreter** - Interpretación de código y análisis de datos
-8. **007_Basic_RAG** - RAG básico
-9. **008_RAG_Azure_AI_Search** - RAG avanzado
+7. **010_MultipleTools_in_Single_Agent** - Combinación de múltiples herramientas
+8. **009_Code_Interpreter** - Interpretación de código y análisis de datos
+9. **007_Basic_RAG** - RAG básico
+10. **008_RAG_Azure_AI_Search** - RAG avanzado
 
 ## 🎯 Casos de Uso
 
