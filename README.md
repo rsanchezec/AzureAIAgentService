@@ -76,11 +76,40 @@ Demostración de cómo combinar múltiples herramientas en un solo agente.
   - Ejemplo práctico: buscar información de usuario y realizar búsqueda web relacionada
   - Demostración de orquestación automática entre herramientas
 
+### 011_Multi_Agentic_Systems
+Introducción a sistemas multi-agente con Semantic Kernel.
+- **Archivo principal**: `00-introduction.py`
+- **Funcionalidad**: 
+  - Configuración básica de Semantic Kernel con Azure OpenAI
+  - Carga de plugins de plantillas de prompts
+  - Ejecución de funciones de saludo con parámetros
+  - Integración con plugins personalizados (basic_plugin)
+
+### 011_Semantic_Kernel_SDK
+Ejemplos completos del SDK de Semantic Kernel para sistemas de IA avanzados.
+- **Archivos**: 
+  - `00-introduction.py` - Introducción básica al kernel
+  - `01-promptTemplate.py` - Trabajo con plantillas de prompts
+  - `02-nativePlugin.py` - Creación de plugins nativos
+  - `03-planner.py` - Planificador secuencial para tareas complejas
+  - `04-agentic_system.py` y `04-agentic_system.ipynb` - Sistema agéntico completo
+- **Datos**: `data/chatgpt.txt` - Archivo de texto para ejemplos de procesamiento
+- **Plugins**: 
+  - `basic_plugin` - Plugin básico con funciones de saludo y contacto
+  - `writerPlugin` - Plugin de escritura con funciones de resumen y email
+- **Funcionalidad**:
+  - Configuración avanzada de Semantic Kernel
+  - Creación y gestión de plugins personalizados
+  - Planificación automática de tareas complejas
+  - Sistemas agénticos con múltiples capacidades
+  - Integración con Azure OpenAI para modelos de chat
+
 ## 🛠️ Tecnologías Utilizadas
 
 - **Azure AI Projects SDK** (`azure-ai-projects==1.0.0b5`)
 - **Azure OpenAI** (`openai`)
 - **Azure Identity** (`azure-identity==1.20.0`)
+- **Semantic Kernel** (`semantic-kernel`) - Framework para orquestación de IA
 - **Python-dotenv** - Gestión de variables de entorno
 - **Requests** - Llamadas HTTP a APIs externas
 - **JSONRef** - Manejo de especificaciones OpenAPI
@@ -97,6 +126,11 @@ Demostración de cómo combinar múltiples herramientas en un solo agente.
    OPENAI_API_BASE=tu_endpoint
    AI_SEARCH_INDEX_NAME=tu_indice
    BING_CONNECTION_NAME=tu_conexion_bing
+   
+   # Para Semantic Kernel
+   AZURE_OPENAI_API_KEY=tu_azure_openai_api_key
+   AZURE_OPENAI_CHAT_COMPLETION_MODEL=tu_modelo_chat
+   AZURE_OPENAI_ENDPOINT=tu_azure_openai_endpoint
    ```
 
 ## 🚀 Instalación
@@ -147,6 +181,8 @@ python agent.py  # o program.py según el módulo
 8. **009_Code_Interpreter** - Interpretación de código y análisis de datos
 9. **007_Basic_RAG** - RAG básico
 10. **008_RAG_Azure_AI_Search** - RAG avanzado
+11. **011_Multi_Agentic_Systems** - Introducción a Semantic Kernel
+12. **011_Semantic_Kernel_SDK** - Sistemas agénticos avanzados
 
 ## 🎯 Casos de Uso
 
@@ -156,6 +192,9 @@ python agent.py  # o program.py según el módulo
 - **Agentes con capacidades específicas** (clima, datos de usuario)
 - **Análisis de datos y visualización** con Code Interpreter
 - **Implementación de RAG** para búsqueda semántica
+- **Sistemas multi-agente** con orquestación inteligente
+- **Planificación automática de tareas** complejas con Semantic Kernel
+- **Plugins personalizados** para funcionalidades específicas
 
 ---
 

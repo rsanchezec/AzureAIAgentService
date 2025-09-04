@@ -1,0 +1,32 @@
+{
+    "schema": 1,
+    "description": "Para crear la información de contacto del usuario",
+    "execution_settings": {
+        "default": {
+            "max_tokens": 1000,
+            "temperature": 0.7
+        }
+    },
+    "input_variables": [
+        {
+            "name": "name",
+            "description": "Nombre del usuario",
+            "default": ""
+        },
+        {
+            "name": "contact_number",
+            "description": "Número de contacto del usuario",
+            "default": ""
+        },
+        {
+            "name": "email_id",
+            "description": "Correo electrónico del usuario",
+            "default": ""
+        },
+        {
+            "name": "address",
+            "description": "Dirección del usuario",
+            "default": ""
+        }
+    ]
+}
