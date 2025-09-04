@@ -97,14 +97,6 @@ Ejemplos completos del SDK de Semantic Kernel para sistemas de IA avanzados y mu
   - Sistemas agénticos con múltiples capacidades
   - Integración con Azure OpenAI para modelos de chat
 
-### 011_Multi_Agentic_Systems
-Sistema multi-agente básico con introducción a Semantic Kernel.
-- **Archivo principal**: `00-introduction.py`
-- **Plugins**: Carpeta `plugins` con `basic_plugin` para funciones de saludo
-- **Funcionalidad**: 
-  - Introducción práctica a sistemas multi-agente
-  - Configuración inicial de Semantic Kernel
-  - Ejemplo básico de carga y ejecución de plugins
 
 ## 🛠️ Tecnologías Utilizadas
 
@@ -183,8 +175,7 @@ python agent.py  # o program.py según el módulo
 8. **009_Code_Interpreter** - Interpretación de código y análisis de datos
 9. **007_Basic_RAG** - RAG básico
 10. **008_RAG_Azure_AI_Search** - RAG avanzado
-11. **011_Multi_Agentic_Systems** - Introducción básica a sistemas multi-agente
-12. **011_Semantic_Kernel_SDK** - SDK completo de Semantic Kernel
+11. **011_Semantic_Kernel_SDK** - SDK completo de Semantic Kernel
 
 ## 🎯 Casos de Uso
 
