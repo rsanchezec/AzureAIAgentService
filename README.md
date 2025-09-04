@@ -76,19 +76,10 @@ Demostración de cómo combinar múltiples herramientas en un solo agente.
   - Ejemplo práctico: buscar información de usuario y realizar búsqueda web relacionada
   - Demostración de orquestación automática entre herramientas
 
-### 011_Multi_Agentic_Systems
-Introducción a sistemas multi-agente con Semantic Kernel.
-- **Archivo principal**: `00-introduction.py`
-- **Funcionalidad**: 
-  - Configuración básica de Semantic Kernel con Azure OpenAI
-  - Carga de plugins de plantillas de prompts
-  - Ejecución de funciones de saludo con parámetros
-  - Integración con plugins personalizados (basic_plugin)
-
 ### 011_Semantic_Kernel_SDK
-Ejemplos completos del SDK de Semantic Kernel para sistemas de IA avanzados.
+Ejemplos completos del SDK de Semantic Kernel para sistemas de IA avanzados y multi-agente.
 - **Archivos**: 
-  - `00-introduction.py` - Introducción básica al kernel
+  - `00-introduction.py` - Introducción básica al kernel y configuración con Azure OpenAI
   - `01-promptTemplate.py` - Trabajo con plantillas de prompts
   - `02-nativePlugin.py` - Creación de plugins nativos
   - `03-planner.py` - Planificador secuencial para tareas complejas
@@ -98,11 +89,22 @@ Ejemplos completos del SDK de Semantic Kernel para sistemas de IA avanzados.
   - `basic_plugin` - Plugin básico con funciones de saludo y contacto
   - `writerPlugin` - Plugin de escritura con funciones de resumen y email
 - **Funcionalidad**:
-  - Configuración avanzada de Semantic Kernel
+  - Configuración básica y avanzada de Semantic Kernel
+  - Carga de plugins de plantillas de prompts
+  - Ejecución de funciones con parámetros personalizados
   - Creación y gestión de plugins personalizados
   - Planificación automática de tareas complejas
   - Sistemas agénticos con múltiples capacidades
   - Integración con Azure OpenAI para modelos de chat
+
+### 011_Multi_Agentic_Systems
+Sistema multi-agente básico con introducción a Semantic Kernel.
+- **Archivo principal**: `00-introduction.py`
+- **Plugins**: Carpeta `plugins` con `basic_plugin` para funciones de saludo
+- **Funcionalidad**: 
+  - Introducción práctica a sistemas multi-agente
+  - Configuración inicial de Semantic Kernel
+  - Ejemplo básico de carga y ejecución de plugins
 
 ## 🛠️ Tecnologías Utilizadas
 
@@ -181,8 +183,8 @@ python agent.py  # o program.py según el módulo
 8. **009_Code_Interpreter** - Interpretación de código y análisis de datos
 9. **007_Basic_RAG** - RAG básico
 10. **008_RAG_Azure_AI_Search** - RAG avanzado
-11. **011_Multi_Agentic_Systems** - Introducción a Semantic Kernel
-12. **011_Semantic_Kernel_SDK** - Sistemas agénticos avanzados
+11. **011_Multi_Agentic_Systems** - Introducción básica a sistemas multi-agente
+12. **011_Semantic_Kernel_SDK** - SDK completo de Semantic Kernel
 
 ## 🎯 Casos de Uso
 
