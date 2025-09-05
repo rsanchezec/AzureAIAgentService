@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Completa de Semantic Kernel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 300px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .sidebar h1 {
+            color: #4a5568;
+            margin-bottom: 30px;
+            font-size: 1.4rem;
+            text-align: center;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 15px;
+        }
+
+        .menu-item {
+            display: block;
+            padding: 15px 20px;
+            margin: 8px 0;
+            text-decoration: none;
+            color: #4a5568;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.7);
+        }
+
+        .menu-item:hover {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .menu-item.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: #4c51bf;
+        }
+
+        .menu-subtitle {
+            font-size: 0.9rem;
+            color: #718096;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 300px;
+            padding: 40px;
+            flex: 1;
+            background: rgba(255, 255, 255, 0.9);
+            min-height: 100vh;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section h2 {
+            color: #2d3748;
+            margin-bottom: 25px;
+            font-size: 2.2rem;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .section h3 {
+            color: #4a5568;
+            margin: 25px 0 15px;
+            font-size: 1.4rem;
+        }
+
+        .section p {
+            line-height: 1.7;
+            margin-bottom: 15px;
+            color: #4a5568;
+        }
+
+        /* Cards */
+        .approach-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid;
+            transition: transform 0.3s ease;
+        }
+
+        .approach-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .approach-card.sk-pure { border-left-color: #48bb78; }
+        .approach-card.sk-hybrid { border-left-color: #ed8936; }
+        .approach-card.azure-pure { border-left-color: #0078d4; }
+
+        /* Code blocks */
+        .code-block {
+            background: #2d3748;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-block pre {
+            color: #e2e8f0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .code-block .language-label {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Comparison table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .comparison-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #f7fafc;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin: 3px;
+        }
+
+        .badge.pro { background: #c6f6d5; color: #22543d; }
+        .badge.con { background: #fed7d7; color: #742a2a; }
+        .badge.neutral { background: #e2e8f0; color: #4a5568; }
+
+        /* Decision tree */
+        .decision-tree {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .decision-node {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            position: relative;
+        }
+
+        .decision-node::before {
+            content: "🤔";
+            position: absolute;
+            left: -10px;
+            top: -10px;
+            background: white;
+            padding: 5px;
+            border-radius: 50%;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+        }
+
+        /* Scroll animations */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <h1>🧠 Semantic Kernel Guide</h1>
+            
+            <div class="menu-subtitle">Introducción</div>
+            <a href="#overview" class="menu-item active">📋 Visión General</a>
+            <a href="#concepts" class="menu-item">💡 Conceptos Clave</a>
+            
+            <div class="menu-subtitle">Enfoques</div>
+            <a href="#sk-pure" class="menu-item">🌿 SK Genérico</a>
+            <a href="#sk-hybrid" class="menu-item">🔄 SK + Azure (Híbrido)</a>
+            <a href="#azure-pure" class="menu-item">☁️ Azure AI Nativo</a>
+            
+            <div class="menu-subtitle">Comparaciones</div>
+            <a href="#comparison" class="menu-item">⚖️ Tabla Comparativa</a>
+            <a href="#decision" class="menu-item">🎯 Guía de Decisión</a>
+            <a href="#examples" class="menu-item">💻 Ejemplos Prácticos</a>
+            
+            <div class="menu-subtitle">Recursos</div>
+            <a href="#best-practices" class="menu-item">✨ Mejores Prácticas</a>
+            <a href="#migration" class="menu-item">🔄 Migración</a>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Overview Section -->
+            <section id="overview" class="section active">
+                <h2>Visión General de Semantic Kernel</h2>
+                
+                <p>Semantic Kernel es un framework de orquestación de IA que permite integrar modelos de lenguaje con código tradicional. Existen tres enfoques principales para implementarlo:</p>
+                
+                <div class="approach-card sk-pure animate-on-scroll">
+                    <h3>🌿 Semantic Kernel Genérico (Puro)</h3>
+                    <p><strong>Filosofía:</strong> Abstracción completa e independiente del proveedor</p>
+                    <p><strong>Ideal para:</strong> Proyectos que requieren portabilidad entre diferentes proveedores de IA</p>
+                    <span class="badge pro">Portabilidad</span>
+                    <span class="badge pro">Simplicidad</span>
+                    <span class="badge con">Funcionalidades limitadas</span>
+                </div>
+
+                <div class="approach-card sk-hybrid animate-on-scroll">
+                    <h3>🔄 Semantic Kernel + Azure AI (Híbrido)</h3>
+                    <p><strong>Filosofía:</strong> Lo mejor de ambos mundos - simplicidad SK con poder Azure</p>
+                    <p><strong>Ideal para:</strong> Desarrollo ágil en Azure con acceso a características específicas</p>
+                    <span class="badge pro">Equilibrio</span>
+                    <span class="badge pro">Flexibilidad</span>
+                    <span class="badge neutral">Complejidad media</span>
+                </div>
+
+                <div class="approach-card azure-pure animate-on-scroll">
+                    <h3>☁️ Azure AI Projects Nativo</h3>
+                    <p><strong>Filosofía:</strong> Control total y acceso completo a características de Azure</p>
+                    <p><strong>Ideal para:</strong> Aplicaciones enterprise que requieren optimización específica</p>
+                    <span class="badge pro">Control total</span>
+                    <span class="badge pro">Performance</span>
+                    <span class="badge con">Más complejo</span>
+                </div>
+            </section>
+
+            <!-- Concepts Section -->
+            <section id="concepts" class="section">
+                <h2>Conceptos Clave</h2>
+                
+                <h3>🧠 Kernel</h3>
+                <p>El cerebro del sistema que orquesta servicios de IA, plugins y funciones.</p>
+                
+                <h3>🔧 Plugin</h3>
+                <p>Conjunto de funciones relacionadas que extienden las capacidades del agente.</p>
+                
+                <h3>🤖 Agent</h3>
+                <p>Entidad conversacional que puede mantener contexto y ejecutar tareas.</p>
+                
+                <h3>🧵 Thread</h3>
+                <p>Hilo de conversación que mantiene el historial y contexto.</p>
+                
+                <h3>📋 Planner</h3>
+                <p>Componente que crea planes automáticos para objetivos complejos.</p>
+            </section>
+
+            <!-- SK Pure Section -->
+            <section id="sk-pure" class="section">
+                <h2>🌿 Semantic Kernel Genérico</h2>
+                
+                <h3>Características Principales</h3>
+                <ul style="margin-left: 20px; line-height: 1.8;">
+                    <li>Independiente del proveedor de IA</li>
+                    <li>Abstracción de alto nivel</li>
+                    <li>Sintaxis simple y consistente</li>
+                    <li>Enfoque en productividad</li>
+                </ul>
+
+                <h3>Ejemplo de Código</h3>
+                <div class="code-block">
+                    <div class="language-label">Python</div>
+                    <pre>
+# Configuración simple
+kernel = Kernel()
+kernel.add_service(AzureChatCompletion(...))
+
+# Creación de agente
+agent = ChatCompletionAgent(
+    kernel=kernel,
+    name="MyAgent",
+    instructions="Eres un asistente útil"
+)
+
+# Conversación con memoria
+thread = ChatHistoryAgentThread()
+response = await agent.get_response("Hola", thread=thread)
+                    </pre>
+                </div>
+
+                <h3>Ventajas</h3>
+                <span class="badge pro">Portabilidad entre proveedores</span>
+                <span class="badge pro">Curva de aprendizaje suave</span>
+                <span class="badge pro">Código limpio y simple</span>
+                <span class="badge pro">Comunidad activa</span>
+
+                <h3>Desventajas</h3>
+                <span class="badge con">Funcionalidades limitadas</span>
+                <span class="badge con">Menos control granular</span>
+                <span class="badge con">Dependiente del framework</span>
+            </section>
+
+            <!-- SK Hybrid Section -->
+            <section id="sk-hybrid" class="section">
+                <h2>🔄 Semantic Kernel + Azure AI (Híbrido)</h2>
+                
+                <h3>Características Principales</h3>
+                <ul style="margin-left: 20px; line-height: 1.8;">
+                    <li>Combina simplicidad SK con poder Azure</li>
+                    <li>Acceso a características específicas de Azure</li>
+                    <li>Migración gradual posible</li>
+                    <li>Balance entre control y simplicidad</li>
+                </ul>
+
+                <h3>Ejemplo de Código</h3>
+                <div class="code-block">
+                    <div class="language-label">Python</div>
+                    <pre>
+# Cliente híbrido
+project_client = AzureAIAgent.create_client(
+    credential=DefaultAzureCredential(),
+    conn_str=connection_string
+)
+
+# Dos pasos: Azure + SK wrapper
+agent_definition = await project_client.agents.create_agent(
+    model=model,
+    name="MyAgent"
+)
+
+agent = AzureAIAgent(
+    client=project_client,
+    definition=agent_definition
+)
+
+# Thread especializado para Azure
+thread = AzureAIAgentThread(client=project_client)
+response = await agent.get_response("Hola", thread=thread)
+                    </pre>
+                </div>
+
+                <h3>Ventajas</h3>
+                <span class="badge pro">Equilibrio poder/simplicidad</span>
+                <span class="badge pro">Acceso a herramientas Azure</span>
+                <span class="badge pro">Migración gradual</span>
+                <span class="badge pro">Sintaxis familiar SK</span>
+
+                <h3>Desventajas</h3>
+                <span class="badge con">Complejidad adicional</span>
+                <span class="badge con">Específico de Azure</span>
+                <span class="badge con">Curva de aprendizaje doble</span>
+            </section>
+
+            <!-- Azure Pure Section -->
+            <section id="azure-pure" class="section">
+                <h2>☁️ Azure AI Projects Nativo</h2>
+                
+                <h3>Características Principales</h3>
+                <ul style="margin-left: 20px; line-height: 1.8;">
+                    <li>API nativa de Azure AI Projects</li>
+                    <li>Control granular total</li>
+                    <li>Acceso a todas las características</li>
+                    <li>Optimización máxima posible</li>
+                </ul>
+
+                <h3>Ejemplo de Código</h3>
+                <div class="code-block">
+                    <div class="language-label">Python</div>
+                    <pre>
+# Cliente nativo
+project_client = AIProjectClient.from_connection_string(...)
+
+# Gestión manual completa
+agent = project_client.agents.create_agent(...)
+thread = project_client.agents.create_thread()
+message = project_client.agents.create_message(...)
+run = project_client.agents.create_run(...)
+
+# Polling manual del estado
+while run.status in ["queued", "in_progress"]:
+    time.sleep(1)
+    run = project_client.agents.get_run(...)
+
+messages = project_client.agents.list_messages(...)
+response = messages.data[0].content[0].text.value
+                    </pre>
+                </div>
+
+                <h3>Ventajas</h3>
+                <span class="badge pro">Control total</span>
+                <span class="badge pro">Performance optimizado</span>
+                <span class="badge pro">Debugging granular</span>
+                <span class="badge pro">Acceso completo Azure</span>
+
+                <h3>Desventajas</h3>
+                <span class="badge con">Más código</span>
+                <span class="badge con">Gestión manual estados</span>
+                <span class="badge con">Específico Azure</span>
+                <span class="badge con">Propenso a errores</span>
+            </section>
+
+            <!-- Comparison Section -->
+            <section id="comparison" class="section">
+                <h2>⚖️ Tabla Comparativa</h2>
+                
+                <table class="comparison-table animate-on-scroll">
+                    <thead>
+                        <tr>
+                            <th>Aspecto</th>
+                            <th>SK Genérico</th>
+                            <th>SK + Azure</th>
+                            <th>Azure Nativo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Complejidad de código</strong></td>
+                            <td>Baja (10 líneas)</td>
+                            <td>Media (15 líneas)</td>
+                            <td>Alta (30+ líneas)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Control granular</strong></td>
+                            <td>Limitado</td>
+                            <td>Medio</td>
+                            <td>Completo</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Portabilidad</strong></td>
+                            <td>Alta</td>
+                            <td>Baja</td>
+                            <td>Ninguna</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Performance</strong></td>
+                            <td>Buena</td>
+                            <td>Muy buena</td>
+                            <td>Óptima</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Curva aprendizaje</strong></td>
+                            <td>Suave</td>
+                            <td>Media</td>
+                            <td>Empinada</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Debugging</strong></td>
+                            <td>Limitado</td>
+                            <td>Bueno</td>
+                            <td>Granular</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Características Azure</strong></td>
+                            <td>Básicas</td>
+                            <td>Extendidas</td>
+                            <td>Completas</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Decision Section -->
+            <section id="decision" class="section">
+                <h2>🎯 Guía de Decisión</h2>
+                
+                <div class="decision-tree animate-on-scroll">
+                    <h3>¿Qué enfoque elegir?</h3>
+                    
+                    <div class="decision-node">
+                        <strong>¿Necesitas que funcione con múltiples proveedores de IA?</strong>
+                        <br>✅ SÍ → <strong>Semantic Kernel Genérico</strong>
+                        <br>❌ NO → Continúa evaluando...
+                    </div>
+                    
+                    <div class="decision-node">
+                        <strong>¿Usas Azure y necesitas características específicas ocasionalmente?</strong>
+                        <br>✅ SÍ → <strong>Semantic Kernel + Azure (Híbrido)</strong>
+                        <br>❌ NO → Continúa evaluando...
+                    </div>
+                    
+                    <div class="decision-node">
+                        <strong>¿Necesitas control total y optimización máxima?</strong>
+                        <br>✅ SÍ → <strong>Azure AI Projects Nativo</strong>
+                        <br>❌ NO → <strong>Semantic Kernel Genérico</strong>
+                    </div>
+                </div>
+
+                <h3>Casos de Uso Recomendados</h3>
+                
+                <div class="approach-card sk-pure">
+                    <h4>🌿 Usa SK Genérico cuando:</h4>
+                    <ul style="margin-left: 20px;">
+                        <li>Prototipado rápido</li>
+                        <li>Aplicaciones multi-proveedor</li>
+                        <li>Equipos junior o mixtos</li>
+                        <li>Presupuesto limitado para desarrollo</li>
+                    </ul>
+                </div>
+
+                <div class="approach-card sk-hybrid">
+                    <h4>🔄 Usa SK + Azure cuando:</h4>
+                    <ul style="margin-left: 20px;">
+                        <li>Desarrollo ágil en Azure</li>
+                        <li>Necesitas flexibilidad futura</li>
+                        <li>Proyecto mediano a grande</li>
+                        <li>Equipo con conocimiento SK</li>
+                    </ul>
+                </div>
+
+                <div class="approach-card azure-pure">
+                    <h4>☁️ Usa Azure Nativo cuando:</h4>
+                    <ul style="margin-left: 20px;">
+                        <li>Performance crítico</li>
+                        <li>Aplicaciones enterprise</li>
+                        <li>Control total requerido</li>
+                        <li>Equipo Azure especializado</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Examples Section -->
+            <section id="examples" class="section">
+                <h2>💻 Ejemplos Prácticos</h2>
+                
+                <h3>Escenario: Chatbot de Atención al Cliente</h3>
+                
+                <div class="approach-card sk-pure">
+                    <h4>🌿 Implementación SK Genérica</h4>
+                    <div class="code-block">
+                        <pre>
+kernel = Kernel()
+kernel.add_service(AzureChatCompletion(...))
+kernel.add_plugin(CustomerServicePlugin(), "CustomerService")
+
+agent = ChatCompletionAgent(kernel=kernel)
+thread = ChatHistoryAgentThread()
+
+while True:
+    user_input = input("Cliente: ")
+    response = await agent.get_response(user_input, thread=thread)
+    print(f"Agente: {response}")
+                        </pre>
+                    </div>
+                    <p><strong>Ventaja:</strong> Código simple, funciona con cualquier proveedor</p>
+                </div>
+
+                <div class="approach-card sk-hybrid">
+                    <h4>🔄 Implementación Híbrida</h4>
+                    <div class="code-block">
+                        <pre>
+project_client = AzureAIAgent.create_client(...)
+agent_def = await project_client.agents.create_agent(
+    model=model,
+    tools=[bing_tool.definitions, crm_tool.definitions]
+)
+
+agent = AzureAIAgent(client=project_client, definition=agent_def)
+thread = AzureAIAgentThread(client=project_client)
+
+response = await agent.get_response(user_input, thread=thread)
+                        </pre>
+                    </div>
+                    <p><strong>Ventaja:</strong> Sintaxis simple + herramientas Azure específicas</p>
+                </div>
+
+                <div class="approach-card azure-pure">
+                    <h4>☁️ Implementación Nativa</h4>
+                    <div class="code-block">
+                        <pre>
+project_client = AIProjectClient.from_connection_string(...)
+agent = project_client.agents.create_agent(...)
+thread = project_client.agents.create_thread()
+
+message = project_client.agents.create_message(...)
+run = project_client.agents.create_and_process_run(...)
+
+while run.status in ["queued", "in_progress"]:
+    time.sleep(0.5)  # Optimización específica
+    run = project_client.agents.get_run(...)
+
+messages = project_client.agents.list_messages(...)
+                        </pre>
+                    </div>
+                    <p><strong>Ventaja:</strong> Control total, optimización de polling, debugging granular</p>
+                </div>
+            </section>
+
+            <!-- Best Practices Section -->
+            <section id="best-practices" class="section">
+                <h2>✨ Mejores Prácticas</h2>
+                
+                <h3>🌿 Para SK Genérico</h3>
+                <ul style="margin-left: 20px; line-height: 1.8;">
+                    <li>Mantén plugins simples y reutilizables</li>
+                    <li>Usa planificadores para tareas complejas</li>
+                    <li>Implementa manejo de errores robusto</li>
+                    <li>Documenta bien las funciones del kernel</li>
+                </ul>
+
+                <h3>🔄 Para SK + Azure</h3>
+                <ul style="margin-left: 20px; line-height: 1.8;">
+                    <li>Aprovecha herramientas específicas de Azure cuando sea necesario</li>
+                    <li>Mantén la lógica de negocio en SK para portabilidad</li>
+                    <li>Usa el cliente Azure para optimizaciones específicas</li>
+                    <li>Planifica la migración gradual</li>
+                </ul>
+
+                <h3>☁️ Para Azure Nativo</h3>
+                <ul style="margin-left: 20px; line-height: 1.8;">
+                    <li>Implementa manejo de estados robusto</li>
+                    <li>Optimiza el polling según tus necesidades</li>
+                    <li>Usa logging granular para debugging</li>
+                    <li>Maneja timeouts y reintentos apropiadamente</li>
+                </ul>
+            </section>
+
+            <!-- Migration Section -->
+            <section id="migration" class="section">
+                <h2>🔄 Guía de Migración</h2>
+                
+                <h3>Ruta de Migración Recomendada</h3>
+                
+                <div class="decision-tree">
+                    <div class="decision-node">
+                        <strong>Fase 1: Prototipo</strong>
+                        <br>Comienza con <strong>SK Genérico</strong> para validar conceptos y arquitectura básica
+                    </div>
+                    
+                    <div class="decision-node">
+                        <strong>Fase 2: Desarrollo</strong>
+                        <br>Migra a <strong>SK + Azure</strong> cuando necesites características específicas
+                    </div>
+                    
+                    <div class="decision-node">
+                        <strong>Fase 3: Optimización</strong>
+                        <br>Considera <strong>Azure Nativo</strong> solo para componentes críticos de performance
+                    </div>
+                </div>
+
+                <h3>Checklist de Migración</h3>
+                
+                <div class="approach-card">
+                    <h4>✅ Antes de migrar:</h4>
+                    <ul style="margin-left: 20px;">
+                        <li>Identifica limitaciones del enfoque actual</li>
+                        <li>Evalúa el ROI de la migración</li>
+                        <li>Planifica tests de regresión</li>
+                        <li>Prepara el entorno de Azure necesario</li>
+                    </ul>
+                </div>
+
+                <div class="approach-card">
+                    <h4>🔄 Durante la migración:</h4>
+                    <ul style="margin-left: 20px;">
+                        <li>Migra componente por componente</li>
+                        <li>Mantén tests automatizados</li>
+                        <li>Documenta cambios y razones</li>
+                        <li>Monitorea performance y estabilidad</li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Menu navigation
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all menu items and sections
+                document.querySelectorAll('.menu-item').forEach(mi => mi.classList.remove('active'));
+                document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+                
+                // Add active class to clicked menu item
+                this.classList.add('active');
+                
+                // Show corresponding section
+                const targetId = this.getAttribute('href').substring(1);
+                const targetSection = document.getElementById(targetId);
+                if (targetSection) {
+                    targetSection.classList.add('active');
+                    
+                    // Scroll animations for new section
+                    targetSection.querySelectorAll('.animate-on-scroll').forEach(element => {
+                        element.classList.remove('visible');
+                        setTimeout(() => {
+                            element.classList.add('visible');
+                        }, 100);
+                    });
+                }
+            });
+        });
+
+        // Scroll animations
+        function handleScrollAnimations() {
+            const elements = document.querySelectorAll('.animate-on-scroll');
+            elements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('visible');
+                }
+            });
+        }
+
+        // Initialize animations for first load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.querySelectorAll('.section.active .animate-on-scroll').forEach(element => {
+                    element.classList.add('visible');
+                });
+            }, 200);
+        });
+
+        window.addEventListener('scroll', handleScrollAnimations);
+
+        // Smooth scrolling for better UX
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+        });
+
+        // Add keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+                const activeItem = document.querySelector('.menu-item.active');
+                const menuItems = Array.from(document.querySelectorAll('.menu-item'));
+                const currentIndex = menuItems.indexOf(activeItem);
+                
+                let nextIndex;
+                if (e.key === 'ArrowDown') {
+                    nextIndex = (currentIndex + 1) % menuItems.length;
+                } else {
+                    nextIndex = (currentIndex - 1 + menuItems.length) % menuItems.length;
+                }
+                
+                menuItems[nextIndex].click();
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>

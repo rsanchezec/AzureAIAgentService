@@ -1,0 +1,17 @@
+Se te proporcionarán los detalles de contacto de un usuario, es decir,
+nombre, correo electrónico, número de teléfono y dirección.
+Organiza los detalles de contacto en un formato JSON.
+
+La salida debería ser algo como esto:
+{
+  "name":"el nombre del usuario",
+  "contact number":"el número de contacto del usuario",
+  "email id":"el correo electrónico del usuario",
+  "address":"la dirección del usuario"
+}
+
+las entradas son:
+nombre: {{$name}}
+número de contacto : {{$contact_number}}
+correo electrónico: {{$email_id}}
+dirección : {{$address}}

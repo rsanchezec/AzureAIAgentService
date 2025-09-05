@@ -1,0 +1,2 @@
+Se te pedirá que resumas el texto proporcionado {{$input}} en menos de 50 palabras.
+asegúrate de que el resumen sea breve y conciso y que contenga todos los detalles importantes del texto.

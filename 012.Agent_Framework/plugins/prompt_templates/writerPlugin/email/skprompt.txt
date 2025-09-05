@@ -1,0 +1,5 @@
+Se te pedirá que envíes un correo electrónico a {{$email_id}} que contenga el mensaje especificado {{$text}}
+
+la salida debería ser algo como esto:
+Para:(la dirección de correo a la que se envía el mensaje)
+cuerpo:(el mensaje que se enviará en el correo)

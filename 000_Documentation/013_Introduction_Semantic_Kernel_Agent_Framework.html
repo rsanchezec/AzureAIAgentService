@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marco de Agente de Semantic Kernel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.5em;
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .sidebar ul li {
+            margin-bottom: 10px;
+        }
+        .sidebar ul li a {
+            color: #ecf0f1;
+            text-decoration: none;
+            display: block;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .sidebar ul li a:hover {
+            background-color: #34495e;
+        }
+        .main-content {
+            flex-grow: 1;
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .section {
+            margin-bottom: 40px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .section h1, .section h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .chart-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h2>Menú</h2>
+            <ul>
+                <li><a href="#introduccion">Introducción</a></li>
+                <li><a href="#caracteristicas">Características Clave</a></li>
+                <li><a href="#tipos-agentes">Tipos de Agentes</a></li>
+                <li><a href="#componentes">Componentes del Marco</a></li>
+                <li><a href="#relacion-azure">Relación con Azure AI</a></li>
+            </ul>
+        </div>
+        <div class="main-content">
+            <div id="introduccion" class="section">
+                <h1>El Marco de Agente de Semantic Kernel</h1>
+                <p>El marco de agente de Semantic Kernel fue creado para superar las deficiencias de los sistemas de agentes crudos, ofreciendo capacidades avanzadas como la conversación entre agentes y la ejecución paralela.</p>
+            </div>
+            <div id="caracteristicas" class="section">
+                <h2>Características Clave</h2>
+                <p>El marco se destaca por su <strong>orquestación modular</strong>, <strong>agentes orientados a objetivos</strong> con conciencia contextual, y una arquitectura <strong>flexible y extensible</strong>. La capacidad más notable es el <strong>"chat de grupo"</strong>, que permite a los agentes colaborar para resolver tareas complejas.</p>
+                <div class="chart-container">
+                    <canvas id="caracteristicasChart"></canvas>
+                </div>
+            </div>
+            <div id="tipos-agentes" class="section">
+                <h2>Tipos de Agentes</h2>
+                <p>Puedes crear tres tipos de agentes principales con este marco:</p>
+                <ul>
+                    <li><strong>Agente de finalización de gráficos:</strong> Ideal para modelos de código abierto o entornos sin Azure AI Service.</li>
+                    <li><strong>Agente asistente OpenAI:</strong> Una opción si trabajas fuera de Azure.</li>
+                    <li><strong>Agente Azure AI:</strong> Se integra directamente con el Servicio de Agente de Azure AI para la gestión de agentes.</li>
+                </ul>
+                <div class="chart-container">
+                    <canvas id="tiposAgentesChart"></canvas>
+                </div>
+            </div>
+            <div id="componentes" class="section">
+                <h2>Componentes del Marco</h2>
+                <p>El sistema se basa en un flujo de trabajo orquestado por el <strong>Núcleo (Kernel)</strong>. Este orquesta la <strong>función de selección</strong> (para elegir al agente correcto), el <strong>chat de grupo</strong> (donde ocurre la interacción) y la <strong>función de terminación</strong> (para finalizar el proceso). Todo esto se apoya en la <strong>gestión de hilos</strong> para mantener el contexto de las conversaciones.</p>
+                <div class="chart-container">
+                    <canvas id="componentesChart"></canvas>
+                </div>
+            </div>
+            <div id="relacion-azure" class="section">
+                <h2>Relación con el Servicio de Agente de Azure AI</h2>
+                <p>Es crucial entender que el marco de agente de Semantic Kernel <strong>no reemplaza</strong> a Azure Agent Service; lo complementa. El servicio de Azure es el lugar para <strong>definir y mantener</strong> tus agentes, mientras que el marco de Semantic Kernel te permite <strong>usarlos y orquestarlos</strong> en tu código personalizado para crear soluciones más avanzadas.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Datos para el gráfico de características clave
+        const caracteristicasData = {
+            labels: ['Orquestación Modular', 'Agentes Orientados a Objetivos', 'Chat de Grupo', 'Ejecución Paralela'],
+            datasets: [{
+                label: 'Importancia de la característica',
+                data: [5, 4, 5, 4],
+                backgroundColor: [
+                    'rgba(52, 152, 219, 0.6)',
+                    'rgba(46, 204, 113, 0.6)',
+                    'rgba(155, 89, 182, 0.6)',
+                    'rgba(241, 196, 15, 0.6)'
+                ],
+                borderColor: [
+                    'rgba(52, 152, 219, 1)',
+                    'rgba(46, 204, 113, 1)',
+                    'rgba(155, 89, 182, 1)',
+                    'rgba(241, 196, 15, 1)'
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        // Gráfico de Características Clave (Radar Chart)
+        new Chart(document.getElementById('caracteristicasChart'), {
+            type: 'radar',
+            data: caracteristicasData,
+            options: {
+                responsive: true,
+                scales: {
+                    r: {
+                        angleLines: { display: false },
+                        suggestedMin: 0,
+                        suggestedMax: 5,
+                        pointLabels: {
+                            font: { size: 12 }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    title: {
+                        display: true,
+                        text: 'Características Principales del Marco de Agente',
+                        font: { size: 16 }
+                    }
+                }
+            }
+        });
+
+        // Datos para el gráfico de tipos de agentes
+        const tiposAgentesData = {
+            labels: ['Agente Azure AI', 'Agente de Finalización', 'Agente Asistente OpenAI'],
+            datasets: [{
+                label: 'Uso Recomendado',
+                data: [70, 20, 10],
+                backgroundColor: ['#3498db', '#f1c40f', '#e74c3c'],
+                hoverOffset: 4
+            }]
+        };
+
+        // Gráfico de Tipos de Agentes (Doughnut Chart)
+        new Chart(document.getElementById('tiposAgentesChart'), {
+            type: 'doughnut',
+            data: tiposAgentesData,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'top' },
+                    title: {
+                        display: true,
+                        text: 'Tipos de Agentes y Uso Recomendado',
+                        font: { size: 16 }
+                    }
+                }
+            }
+        });
+
+        // Datos para el gráfico de componentes
+        const componentesData = {
+            labels: ['Núcleo (Kernel)', 'Planificador', 'Función de Selección', 'Chat de Grupo', 'Función de Terminación', 'Plugins'],
+            datasets: [{
+                label: 'Dependencia del componente',
+                data: [100, 80, 75, 90, 85, 95],
+                backgroundColor: [
+                    '#2980b9', '#8e44ad', '#34495e', '#16a085', '#d35400', '#2c3e50'
+                ],
+                borderColor: '#fff',
+                borderWidth: 2
+            }]
+        };
+
+        // Gráfico de Componentes del Marco (Bar Chart)
+        new Chart(document.getElementById('componentesChart'), {
+            type: 'bar',
+            data: componentesData,
+            options: {
+                responsive: true,
+                indexAxis: 'y',
+                plugins: {
+                    legend: { display: false },
+                    title: {
+                        display: true,
+                        text: 'Componentes Clave del Flujo de Trabajo',
+                        font: { size: 16 }
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

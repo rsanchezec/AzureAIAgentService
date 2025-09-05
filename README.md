@@ -14,6 +14,8 @@ Documentación HTML del curso con resúmenes de:
 - MCP (Model Context Protocol)
 - Multiagentes con Azure Semantic Kernel
 - Suite MCP con multiagentes y plugins
+- Introduction Semantic Kernel Agent Framework
+- Semantic Kernel Guide completo
 
 ### 001_ChatCompletionsAPI
 Introducción básica a la API de Chat Completions de Azure OpenAI.
@@ -97,6 +99,26 @@ Ejemplos completos del SDK de Semantic Kernel para sistemas de IA avanzados y mu
   - Sistemas agénticos con múltiples capacidades
   - Integración con Azure OpenAI para modelos de chat
 
+### 012_Agent_Framework
+Implementación avanzada de agentes usando Semantic Kernel Agent Framework con notebooks interactivos.
+- **Archivos**:
+  - `01-gettingStarted.ipynb` - Introducción y configuración inicial del framework
+  - `02-AzureAIAgent.ipynb` - Implementación de agentes con Azure AI
+  - `03-Native_and_Prompt_Plugins.ipynb` - Creación y uso de plugins nativos y de prompt
+  - `04-AzureAIAgentWithPlugins.ipynb` - Integración de plugins con agentes de Azure AI
+  - `05-agentChat.ipynb` - Sistema de chat multi-agente
+  - `weather_openapi.json` - Especificación OpenAPI para servicios meteorológicos
+- **Plugins**:
+  - `basic_plugin` - Plugin básico con funciones de saludo y contacto
+  - `writerPlugin` - Plugin de escritura con funciones de resumen y email
+- **Funcionalidad**:
+  - Framework completo de agentes con Semantic Kernel
+  - Notebooks interactivos para aprendizaje paso a paso
+  - Integración avanzada con Azure AI Services
+  - Sistemas de chat multi-agente
+  - Orquestación avanzada de plugins y herramientas
+  - Ejemplos prácticos con casos de uso reales
+
 
 ## 🛠️ Tecnologías Utilizadas
 
@@ -176,6 +198,7 @@ python agent.py  # o program.py según el módulo
 9. **007_Basic_RAG** - RAG básico
 10. **008_RAG_Azure_AI_Search** - RAG avanzado
 11. **011_Semantic_Kernel_SDK** - SDK completo de Semantic Kernel
+12. **012_Agent_Framework** - Framework avanzado de agentes con notebooks interactivos
 
 ## 🎯 Casos de Uso
 
@@ -188,6 +211,8 @@ python agent.py  # o program.py según el módulo
 - **Sistemas multi-agente** con orquestación inteligente
 - **Planificación automática de tareas** complejas con Semantic Kernel
 - **Plugins personalizados** para funcionalidades específicas
+- **Notebooks interactivos** para desarrollo y experimentación con agentes
+- **Framework completo de agentes** con Semantic Kernel Agent Framework
 
 ---
 

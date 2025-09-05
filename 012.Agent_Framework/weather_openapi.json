@@ -1,0 +1,62 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Obtener datos del clima",
+    "description": "Recupera los datos del clima actual para una ubicación, basado en wttr.in.",
+    "version": "v1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://wttr.in"
+    }
+  ],
+  "auth": [],
+  "paths": {
+    "/{location}": {
+      "get": {
+        "description": "Obtener la información del clima para una ubicación específica",
+        "operationId": "GetCurrentWeather",
+        "parameters": [
+          {
+            "name": "location",
+            "in": "path",
+            "description": "La ciudad o ubicación para la cual recuperar el clima",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "description": "Usar siempre el valor j1 para este parámetro",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "j1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Respuesta exitosa",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Ubicación no encontrada"
+          }
+        },
+        "deprecated": false
+      }
+    }
+  },
+  "components": {
+    "schemes": {}
+  }
+}

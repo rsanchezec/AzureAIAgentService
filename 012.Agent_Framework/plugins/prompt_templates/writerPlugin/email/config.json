@@ -1,0 +1,22 @@
+{
+    "schema": 1,
+    "description": "Para enviar un correo electrónico a la dirección especificada con un mensaje específico",
+    "execution_settings": {
+        "default": {
+            "max_tokens": 1000,
+            "temperature": 0.7
+        }
+    },
+    "input_variables": [
+        {
+            "name": "email_id",
+            "description": "La dirección de correo electrónico a la que se debe enviar el correo",
+            "default": ""
+        },
+        {
+            "name": "text",
+            "description": "El mensaje que se enviará en el correo electrónico",
+            "default": ""
+        }
+    ]
+}

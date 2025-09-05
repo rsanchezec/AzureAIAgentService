@@ -1,0 +1,1 @@
+Genera un saludo para el usuario {{$name}} de una manera muy amable. El saludo debe incluir la edad {{$age}} del usuario junto con el nombre.
